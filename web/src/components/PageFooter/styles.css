@@ -1,0 +1,24 @@
+.page-footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    width: 100vw;
+    height: 10.9rem;
+    margin-bottom: 0;
+}
+a{
+    color: var(--color-title);
+    text-decoration: none;
+}
+.title-footer{
+    background-color: var(--color-primary-dark);
+    margin: 2rem;
+    border-radius: 2rem;
+    padding: 1rem;
+    transition: 1s;
+}
+.title-footer:hover{
+    background-color: var(--color-primary-light);
+    transition: 1s;
+}
