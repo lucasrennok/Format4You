@@ -7,3 +7,21 @@
 .content{
     padding: 4rem;
 }
+textarea{
+    min-width: 30rem;
+    max-width: 45rem;
+    min-height: 25rem;
+    width: 40rem;
+    height: 26rem;
+}
+.title-writer{
+    color: var(--color-primary-light);
+}
+@media (min-width: 700px){
+    textarea{
+        min-width: 30rem;
+        max-width: 100rem;
+        width: 700px;
+        height: 25.6rem;
+    }
+}
