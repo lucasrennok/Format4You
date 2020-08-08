@@ -5,7 +5,7 @@ import './styles.css'
 import PageFooter from '../../components/PageFooter/PageFooter';
 
 function Writer() {
-  const defaultTextArea = "aa";
+  const defaultTextArea = "";
 
   return (
     <div className="page-writer">
@@ -13,6 +13,7 @@ function Writer() {
       <div className="content">
         <h1 className="title-writer">Writer</h1>
         <textarea>{defaultTextArea}</textarea>
+        <button type="button">Format</button>
       </div>
       <PageFooter />
     </div>

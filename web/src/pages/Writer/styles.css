@@ -8,14 +8,39 @@
     padding: 4rem;
 }
 textarea{
+    background-color: var(--color-background-dark);
+    color: var(--color-text-button);
+    outline: none;
+    border-radius: 10px;
     min-width: 30rem;
     max-width: 45rem;
     min-height: 25rem;
     width: 40rem;
     height: 26rem;
 }
+textarea:focus{
+    background-color: var(--color-title-in-primary);
+}
 .title-writer{
     color: var(--color-primary-light);
+}
+.content{
+    display: flex;
+    flex-direction: column;
+}
+.content button{
+    padding: 1rem;
+    margin: 1rem 0;
+    background-color: var(--color-secondary);
+    color: var(--color-text-button);
+    border-radius: 20px;
+    border-style: none;
+    transition: 1s;
+}
+.content button:hover{
+    background-color: var(--color-secondary-dark);
+    color: var(--color-primary-light);
+    transition: 0.8s;
 }
 @media (min-width: 700px){
     textarea{
