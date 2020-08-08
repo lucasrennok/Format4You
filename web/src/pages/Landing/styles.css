@@ -16,18 +16,23 @@ a{
     color: var(--color-title);
     text-decoration: none;
 }
-button{
-    outline: 0;
-    border-radius: 2rem;
-    width: 100%;
-    padding: 1rem;
-    margin: 1rem auto;
+.writeBut{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 3rem;
+    padding: 2rem 3rem;
+    border-radius: 5rem;
+    color: var(--color-text-button);
     background-color: var(--color-secondary);
-    color: var(--color-text-button);
 }
-button:hover{
+.writeBut:hover{
     background-color: var(--color-secondary-dark);
-    color: var(--color-text-button);
+}
+.writeBut img{
+    padding-right: 1rem;
+    height: 5vh;
+    align-content: flex-start;
 }
 .title-footer{
     background-color: var(--color-background);
