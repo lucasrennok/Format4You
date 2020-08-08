@@ -25,6 +25,8 @@
 }
 .writeBut:hover{
     background-color: var(--color-secondary-dark);
+    color: var(--color-primary-light);
+    border-color: var(--color-primary-light);
     transition: 0.8s;
 }
 .writeBut img{
