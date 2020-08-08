@@ -1,59 +1,54 @@
 :root {
-    --color-background: #F0F0F7;
-    --color-primary-lighter: #9871F5;
-    --color-primary-light: #916BEA;
-    --color-primary: #8257E5;
-    --color-primary-dark: #774DD6;
-    --color-primary-darker: #6842C2;
-    --color-secondary: #04D361;
-    --color-secondary-dark: #04BF58;
+    --color-background: #d2d2eb;
+    --color-background-dark: #b0b0c5;
+    --color-primary-lighter: #8859f3;
+    --color-primary-light: #855aeb;
+    --color-primary: #6d3ce0;
+    --color-primary-dark: #6c3ed8;
+    --color-primary-darker: #582bc2;
+    --color-secondary: #edf05a;
+    --color-secondary-dark: #d5d823;
     --color-title-in-primary: #FFFFFF;
-    --color-text-in-primary: #D4C2FF;
-    --color-text-title: #32264D;
-    --color-text-complement: #9C98A6;
-    --color-text-base: #6A6180;
+    --color-text-button: #49464e;
+    --color-text-base: #FAFAFC;
     --color-line-in-white: #E6E6F0;
     --color-input-background: #F8F8FC;
-    --color-button-text: #FFFFFF;
-    --color-box-base: #FFFFFF;
-    --color-box-footer: #FAFAFC;
-  
+
     font-size: 60%;
-  }
+}
 
-  *{
-      margin:0;
-      padding: 0;
-      box-sizing: border-box;
-  }
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-  html,body,#root{
-      height: 100vh;
-  }
+html,body,#root{
+    height: 100vh;
+}
 
-  body{
-      background: var(--color-background);
-  }
+body{
+    background-color: var(--color-line-in-white);
+}
 
-  #root{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
+#root{
+    align-items: center;
+    justify-content: center;
+}
 
-  body,input,button,textarea{
-      font: 500 1.6rem Poppins;
-      color: var(--color-text-base);
-  }
+body,input,button,textarea{
+    font: 500 1.6rem Poppins;
+    color: var(--color-text-base);
+}
 
-  .container{
-      width: 90vw;
-      max-width: 700px;
-      max-height: 100vh;
-  }
+.container{
+    width: 90vw;
+    max-width: 700px;
+    max-height: 100vh;
+}
 
-  @media(min-width: 700px){
-      :root{
-          font-size: 62.5%;
-      }
-  }
+@media(min-width: 700px){
+    :root{
+        font-size: 62.5%;
+    }
+}
