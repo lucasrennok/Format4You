@@ -13,9 +13,15 @@ const PageHeader: React.FC<PageHeaderProps>= (pageHeaderProps) => {
             <img src={pageIcon} alt="leaf" className="pageIcon"/>
             {pageHeaderProps.inputBoolean
                 ? 
-                <input type="text"></input>
-                : 
-                <h1 className="title">Format 4 You</h1>
+                <div className="inputTitle">
+                    <label>Document title</label>
+                    <div className="inputBox">
+                        <input type="text" value="newDocument"></input>
+                        <p>.docx</p>
+                    </div>
+                </div>
+                :
+                <h1 className="title-header">Format 4 You</h1>
             }
         </div>
     );
