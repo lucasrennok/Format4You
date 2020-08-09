@@ -7,8 +7,11 @@
     height: 20vh;
     margin-bottom: 0;
 }
-.title-header{
+.title-box .title-header{
     color: var(--color-title-in-primary);
+}
+.title-box p{
+    color: var(--color-background);
 }
 .pageIcon{
     display: flex;

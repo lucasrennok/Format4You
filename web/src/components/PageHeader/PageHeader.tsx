@@ -16,16 +16,18 @@ const PageHeader: React.FC<PageHeaderProps>= (pageHeaderProps) => {
                 <div className="inputTitle">
                     <label>Document title</label>
                     <div className="inputBox">
-                        <input type="text" value="newDocument"></input>
+                        <input type="text" maxLength={15} defaultValue="newDocument" />
                         <p>.docx</p>
                     </div>
                 </div>
                 :
-                <h1 className="title-header">Format 4 You</h1>
+                <div className="title-box">
+                    <h1 className="title-header">Format 4 You</h1>
+                    <p>You write we format</p>
+                </div>
             }
         </div>
     );
 }
-//let us format for you | you write we format
 
 export default PageHeader;
