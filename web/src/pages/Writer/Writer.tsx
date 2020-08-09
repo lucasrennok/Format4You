@@ -3,6 +3,7 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 
 import './styles.css'
 import PageFooter from '../../components/PageFooter/PageFooter';
+import { genDocxWordWithData } from '../../services/genDocx';
 
 function Writer() {
   const defaultTextArea = "";
@@ -18,7 +19,7 @@ function Writer() {
   }
 
   function getData(){
-    console.log(fileName, textInWriter);
+    genDocxWordWithData(fileName, textInWriter);
   }
 
   return (
