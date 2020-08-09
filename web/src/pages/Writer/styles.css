@@ -47,6 +47,33 @@ textarea:focus{
     background-color: var(--color-text-button);
     color: var(--color-primary-light);
 }
+.inputTitle{
+    background-color: var(--color-primary);
+    border-radius: 5rem;
+    padding: 2rem;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    font: 400 2.0rem Archivo;
+}
+.inputBox{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.inputTitle label{
+    color: var(--color-line-in-white);
+}
+.inputTitle input{
+    width: 15rem;
+    border-radius: 1rem;
+    border-style: double;
+    outline: none;
+    color: var(--color-text-button);
+}
+.inputTitle input:focus{
+    background-color: var(--color-line-in-white);
+}
 @media (min-width: 700px){
     textarea{
         min-width: 30rem;
