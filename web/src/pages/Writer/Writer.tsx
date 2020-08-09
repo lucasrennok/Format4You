@@ -13,7 +13,6 @@ function Writer() {
     setTextInWriter(e.target.value);
   }
   
-  //to handle the file name
   const handleDocTitleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
     setFileName(e.target.value);
   }

@@ -4,7 +4,7 @@
     justify-content: center;
     background-color: var(--color-primary);
     width: 100vw;
-    height: 10.9rem;
+    height: 17.5vh;
     margin-bottom: 0;
 }
 a{
@@ -13,10 +13,11 @@ a{
 }
 .title-footer{
     background-color: var(--color-primary-dark);
-    margin: 2rem;
+    margin: 1rem;
     border-radius: 2rem;
-    padding: 1rem;
+    padding: 0.8rem;
     transition: 1s;
+    font-size: 3vh;
 }
 .title-footer:hover{
     background-color: var(--color-primary-light);
