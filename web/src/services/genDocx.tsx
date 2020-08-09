@@ -7,11 +7,14 @@ import {saveAs} from 'file-saver';
 
 export function genDocxWordWithData(fileName: string, textWrote: string){
     console.log(fileName, textWrote);
-    const doc = new Document();
+    if(fileName==""){
+        fileName="newDoc";
+    }
+    const newDoc = new Document();
 
-    Packer.toBlob(doc).then(blob => {
-      console.log(blob);
-      saveAs(blob, "test.docx");
+    Packer.toBlob(newDoc).then(blob => {
+      //console.log(blob);
+      saveAs(blob, fileName+".docx");
       console.log("Document created successfully");
     });
 }

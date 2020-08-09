@@ -36,3 +36,8 @@ Wait a minute, developing...
 - Share this repository with your friends
 
 **Thank you, enjoy it, haha, :wink:**
+
+### 🤔 Future Challenges
+
+1. New templates to format
+2. New extensions to the documents
