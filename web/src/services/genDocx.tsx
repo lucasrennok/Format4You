@@ -25,6 +25,8 @@ function downloadDocx(newDoc: Document, fileName: string){
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
     const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:'];
+    let styleFormatList = {};
+    let styleTextList = {};
     let data = [];
     let textAux = "", word = "";
     let commentary = false;
@@ -39,17 +41,19 @@ function buildDataToTheDocument(textWrote: string){
                 commentary = true;
             }else if(word==='#n:'){ // \n
                 if(!commentary){
-                    data[data.length] = new Paragraph({text: textAux, spacing: {
-                        before: 200,
-                    },});
+                    data[data.length] = new Paragraph({children:[new TextRun({text: textAux, ...styleTextList}),], ...styleFormatList});
                 }
                 textAux = "";
             }else if(word==='#t:'){ // \t
                 textAux += '\t';
+            }else if(!commentary){
+                //get the style
+                styleFormatList = getStyleFormatFrom(word);
+                styleTextList = getStyleTextFrom(word);
             }
         }else if(textWrote[i]==='\n'){
             if(!commentary){
-                data[data.length] = new Paragraph({children: [new TextRun(textAux+word)]});
+                data[data.length] = new Paragraph({children:[new TextRun({text: textAux+word, ...styleTextList}),], ...styleFormatList});
             }
             textAux = "";
             commentary = false;
@@ -64,7 +68,225 @@ function buildDataToTheDocument(textWrote: string){
     }
     // Get the last line
     if(!commentary){
-        data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
+        data[data.length] = new Paragraph({children:[new TextRun({text: textAux, ...styleTextList})], ...styleFormatList});
     }
     return data;
+}
+
+function getStyleFormatFrom(word: string){
+    let styleCreate = {}
+    switch(word){
+        case '#title:':
+            styleCreate = {
+                spacing: {
+                    before: 240, // 240 = 12pt
+                    after: 0, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, // 455 = 0,8cm
+                    right: 0, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.CENTER,
+            }
+            break;
+        case '#author:':
+            styleCreate = {
+                spacing: {
+                    before: 240, // 240 = 12pt
+                    after: 0, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, // 455 = 0,8cm
+                    right: 0, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.CENTER,
+            }
+            break;
+        case '#institute:':
+            styleCreate = {
+                spacing: {
+                    before: 240, // 240 = 12pt
+                    after: 0, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, // 455 = 0,8cm
+                    right: 0, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.CENTER,
+            }
+            break;
+        case '#email:':
+            styleCreate = {
+                spacing: {
+                    before: 120, // 240 = 12pt
+                    after: 120, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, // 455 = 0,8cm
+                    right: 0, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.CENTER,
+            }
+            break;
+        case '#abstract:':
+            styleCreate = {
+                spacing: {
+                    before: 120, // 240 = 12pt
+                    after: 120, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 455, // 455 = 0,8cm
+                    right: 455, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.JUSTIFIED,
+            }
+            break;
+        case '#resumo:':
+            styleCreate = {
+                spacing: {
+                    before: 120, // 240 = 12pt
+                    after: 120, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 455, // 455 = 0,8cm
+                    right: 455, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.JUSTIFIED,
+            }
+            break;
+        case '#section:':
+            styleCreate = {
+                spacing: {
+                    before: 240, // 240 = 12pt
+                    after: 0, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, // 455 = 0,8cm
+                    right: 0, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.LEFT,
+            }
+            break;
+        case '#subsec:':
+            styleCreate = {
+                spacing: {
+                    before: 240, // 240 = 12pt
+                    after: 0, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, // 455 = 0,8cm
+                    right: 0, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.LEFT,
+            }
+            break;
+        case '#text:':
+            styleCreate = {
+                spacing: {
+                    before: 120, // 240 = 12pt
+                    after: 0, // 240 = 12pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, // 455 = 0,8cm
+                    right: 0, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.LEFT,
+            }
+            break;
+        default:
+            break;
+    // '#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:'];
+    }
+    return styleCreate;
+}
+
+function getStyleTextFrom(word: string){
+    let styleCreate = {}
+    switch(word){
+        case '#title:':
+            styleCreate = {
+                bold: true,
+                font: "Times",
+                size: 32, // 32 = 16 
+                italics: false,
+            }
+            break;
+        case '#author:':
+            styleCreate = {
+                bold: true,
+                font: "Times",
+                size: 24,
+                italics: false,
+            }
+            break;
+        case '#institute:':
+            styleCreate = {
+                bold: false,
+                font: "Times",
+                size: 24,
+                italics: false,
+            }
+            break;
+        case '#email:':
+            styleCreate = {
+                bold: false,
+                font: "Courier New",
+                size: 20,
+                italics: false,
+            }
+            break;
+        case '#abstract:':
+            styleCreate = {
+                bold: false,
+                font: "Times",
+                size: 24,
+                italics: true,
+            }
+            break;
+        case '#resumo:':
+            styleCreate = {
+                bold: false,
+                font: "Times",
+                size: 24,
+                italics: true,
+            }
+            break;
+        case '#section:':
+            styleCreate = {
+                bold: true,
+                font: "Times",
+                size: 26,
+                italics: false,
+            }
+            break;
+        case '#subsec:':
+            styleCreate = {
+                bold: true,
+                font: "Times",
+                size: 24,
+                italics: false,
+            }
+            break;
+        case '#text:':
+            styleCreate = {
+                bold: false,
+                font: "Times",
+                size: 24,
+                italics: false,
+            }
+            break;
+        default:
+            break;
+    // '#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:'];
+    }
+    return styleCreate;
 }
