@@ -24,7 +24,7 @@ function downloadDocx(newDoc: Document, fileName: string){
 
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#:','\\\\n',];
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:'];
     let data = [];
     let textAux = "", word = "";
     let commentary = false;
@@ -34,9 +34,16 @@ function buildDataToTheDocument(textWrote: string){
             i++;
         }
         if(commands.includes(word)){
-            console.log('tudo bom');
-            if(word==="#:"){
+            //word diferentes fazem um tipo de formato do paragraph
+            if(word==="#:"){ // commentary
                 commentary = true;
+            }else if(word==='#n:'){ // \n
+                if(!commentary){
+                    data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
+                }
+                textAux = "";
+            }else if(word==='#t:'){ // \t
+                textAux += '\t';
             }
         }else if(textWrote[i]==="\n"){
             if(!commentary){
@@ -54,6 +61,8 @@ function buildDataToTheDocument(textWrote: string){
         word="";
     }
     // Get the last line
-    data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
+    if(!commentary){
+        data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
+    }
     return data;
 }

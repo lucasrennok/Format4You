@@ -6,7 +6,7 @@ import PageFooter from '../../components/PageFooter/PageFooter';
 import { genDocxWordWithData } from '../../services/genDocx';
 
 function Writer() {
-  const defaultTextArea = "";
+  const defaultTextArea = "#title:\n#author:\n#institute:\n#email:\n#abstract:\n#resumo:\n#:\n#:\n#section:\n#:\n#text:\n#:";
   const [fileName, setFileName] = useState('newDocument');
   const [textInWriter, setTextInWriter] = useState('');
 
