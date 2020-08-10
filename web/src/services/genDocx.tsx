@@ -24,18 +24,26 @@ function downloadDocx(newDoc: Document, fileName: string){
 
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#:','\\\\n',];
     let data = [];
     let textAux = "", word = "";
+    let commentary = false;
     for(let i=0; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
             word+=textWrote[i];
             i++;
         }
-        if(word==='#title:'){
+        if(commands.includes(word)){
             console.log('tudo bom');
+            if(word==="#:"){
+                commentary = true;
+            }
         }else if(textWrote[i]==="\n"){
-            data[data.length] = new Paragraph({children: [new TextRun(textAux+word)]});
+            if(!commentary){
+                data[data.length] = new Paragraph({children: [new TextRun(textAux+word)]});
+            }
             textAux = "";
+            commentary = false;
         }else{
             if(i<textWrote.length){
                 textAux+=word+textWrote[i];
