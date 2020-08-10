@@ -43,4 +43,3 @@ Wait a minute, developing...
 2. New extensions to the documents
 3. Put tables, charts and images
 4. Format references
-5. TextArea autosize
