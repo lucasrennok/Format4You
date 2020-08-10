@@ -13,10 +13,9 @@ function Writer() {
 
   const handleWriterChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>{
     setTextInWriter(e.target.value);
-    //e.target.style.height = '100rem';
-    // if(e.target.scrollHeight !== e.target.style.height){
-    //   console.log(e.target.scrollHeight);
-    // }
+
+    const numScroll = e.target.scrollHeight;
+    e.target.style.height = (numScroll-(numScroll%25))+'px';
   }
   
   const handleDocTitleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{

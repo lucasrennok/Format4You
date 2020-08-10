@@ -39,7 +39,9 @@ function buildDataToTheDocument(textWrote: string){
                 commentary = true;
             }else if(word==='#n:'){ // \n
                 if(!commentary){
-                    data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
+                    data[data.length] = new Paragraph({text: textAux, spacing: {
+                        before: 200,
+                    },});
                 }
                 textAux = "";
             }else if(word==='#t:'){ // \t
