@@ -7,7 +7,7 @@ import { genDocxWordWithData } from '../../services/genDocx';
 
 function Writer() {
   // defaultTextArea => template SBC
-  const defaultTextArea = "#title:\n#author:\n#institute:\n#email:\n#abstract:\n#resumo:\n#:\n#:\n#section:\n#:\n#text:\n#:";
+  const defaultTextArea = "#title:\n#author:\n#institute:\n#email:\n#abstract:\n#resumo:\n#: \n#: \n#section:\n#: \n#text:\n#: ";
   const [fileName, setFileName] = useState('newDocument');
   const [textInWriter, setTextInWriter] = useState('');
 
