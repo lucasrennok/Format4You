@@ -24,11 +24,11 @@ function downloadDocx(newDoc: Document, fileName: string){
 
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:'];
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:'];
     let styleFormatList = {};
     let styleTextList = {};
-    let data = [];
-    let textAux = "", word = "";
+    let data = [], phrase = [];
+    let word = "";
     let commentary = false;
     for(let i=0; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
@@ -41,11 +41,23 @@ function buildDataToTheDocument(textWrote: string){
                 commentary = true;
             }else if(word==='#n:'){ // \n
                 if(!commentary){
-                    data[data.length] = new Paragraph({children:[new TextRun({text: textAux, ...styleTextList}),], ...styleFormatList});
+                    data[data.length] = new Paragraph({children: phrase, ...styleFormatList});
                 }
-                textAux = "";
+                phrase = []
             }else if(word==='#t:'){ // \t
-                textAux += '\t';
+                phrase[phrase.length] = new TextRun({text: '\t',...styleTextList})
+            }else if(word==='#b:' || word==='#bc:' || word==='#i:' || word==='#ic:'){
+                if(!commentary){
+                    if(word==='#b:'){
+                        styleTextList = { ...styleTextList, bold: true}
+                    }else if(word==='#bc:'){
+                        styleTextList = { ...styleTextList, bold: false}
+                    }else if(word==='#i:'){
+                        styleTextList = { ...styleTextList, italics: true}
+                    }else if(word==='#ic:'){
+                        styleTextList = { ...styleTextList, italics: false}
+                    }
+                }
             }else if(!commentary){
                 //get the style
                 styleFormatList = getStyleFormatFrom(word);
@@ -53,22 +65,23 @@ function buildDataToTheDocument(textWrote: string){
             }
         }else if(textWrote[i]==='\n'){
             if(!commentary){
-                data[data.length] = new Paragraph({children:[new TextRun({text: textAux+word, ...styleTextList}),], ...styleFormatList});
+                phrase[phrase.length] = new TextRun({text: word,...styleTextList});
+                data[data.length] = new Paragraph({children: phrase, ...styleFormatList});
             }
-            textAux = "";
+            phrase = []
             commentary = false;
         }else{
             if(i<textWrote.length){
-                textAux+=word+textWrote[i];
+                phrase[phrase.length] = new TextRun({text: word+textWrote[i],...styleTextList})
             }else{
-                textAux+=word;
+                phrase[phrase.length] = new TextRun({text: word,...styleTextList})
             }
         }
         word="";
     }
     // Get the last line
     if(!commentary){
-        data[data.length] = new Paragraph({children:[new TextRun({text: textAux, ...styleTextList})], ...styleFormatList});
+        data[data.length] = new Paragraph({children: phrase, ...styleFormatList});
     }
     return data;
 }
