@@ -1,4 +1,4 @@
-import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun } from 'docx';
+import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun } from 'docx';
 import {saveAs} from 'file-saver';
 
 //this function generate a document to be downloaded
@@ -25,16 +25,27 @@ function downloadDocx(newDoc: Document, fileName: string){
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
     let data = [];
-    let textAux = "";
+    let textAux = "", word = "";
     for(let i=0; i<textWrote.length; i++){
-        if(textWrote[i]=="\n"){
-            data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
+        while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
+            word+=textWrote[i];
+            i++;
+        }
+        if(word==='#title:'){
+            console.log('tudo bom');
+        }else if(textWrote[i]==="\n"){
+            data[data.length] = new Paragraph({children: [new TextRun(textAux+word)]});
             textAux = "";
         }else{
-            textAux+=textWrote[i];
+            if(i<textWrote.length){
+                textAux+=word+textWrote[i];
+            }else{
+                textAux+=word;
+            }
         }
+        word="";
     }
-    //get the last line
+    // Get the last line
     data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
     return data;
 }

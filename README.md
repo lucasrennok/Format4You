@@ -1,12 +1,12 @@
 # <img src="/web/src/assets/images/icons/leaf.png" width="80" height="80">Format 4 You
 >           *You write we format*
 
-A plataform that format your projects in ABNT style, you just need to put your thougths at the paper. Leave the boring job to us and use your time better in your works.
+A plataform that format your projects in SBC style, you just need to put your thougths at the paper. Leave the boring job to us and use your time better in your works.
 
 <img src="/web/src/assets/images/background.png" width="450" height="300">
 
 ## :newspaper: About it
-This project was made with ReactJs in typescript template. The idea is to auto format documents with the template: ABNT. It will improove how you spend your time and make easier to do your works.
+This project was made with ReactJs in typescript template. The idea is to auto format documents with the template: SBC. It will improove how you spend your time and make easier to do your works.
 
 ## :heavy_check_mark: Requirements
 
