@@ -25,6 +25,16 @@ function downloadDocx(newDoc: Document, fileName: string){
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
     let data = [];
-    data[0] = new Paragraph({children: [new TextRun("geeeeeee"+textWrote)]})
+    let textAux = "";
+    for(let i=0; i<textWrote.length; i++){
+        if(textWrote[i]=="\n"){
+            data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
+            textAux = "";
+        }else{
+            textAux+=textWrote[i];
+        }
+    }
+    //get the last line
+    data[data.length] = new Paragraph({children: [new TextRun(textAux)]});
     return data;
 }
