@@ -35,7 +35,7 @@ function buildDataToTheDocument(textWrote: string){
         }
         if(commands.includes(word)){
             //word diferentes fazem um tipo de formato do paragraph
-            if(word==="#:"){ // commentary
+            if(word==='#:'){ // commentary
                 commentary = true;
             }else if(word==='#n:'){ // \n
                 if(!commentary){
@@ -45,7 +45,7 @@ function buildDataToTheDocument(textWrote: string){
             }else if(word==='#t:'){ // \t
                 textAux += '\t';
             }
-        }else if(textWrote[i]==="\n"){
+        }else if(textWrote[i]==='\n'){
             if(!commentary){
                 data[data.length] = new Paragraph({children: [new TextRun(textAux+word)]});
             }
