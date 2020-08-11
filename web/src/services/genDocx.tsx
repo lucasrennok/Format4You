@@ -1,16 +1,11 @@
-import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent } from 'docx';
+import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent, Media } from 'docx';
 import {saveAs} from 'file-saver';
+import * as fs from 'fs';
 
 //this function generate a document to be downloaded
 export function genDocxWordWithData(fileName: string, textWrote: string){
-    const newDocument = new Document();
 
-    newDocument.addSection({margins: { //margin of the document
-        top: 1985,  // 3,5cm = 1985
-        right: 1700,  // 3cm = 1700
-        bottom: 1420,  // 2,5cm = 1420
-        left: 1700,  //3cm = 1700
-    },children: buildDataToTheDocument(textWrote),});
+    const newDocument = buildDataToTheDocument(textWrote);
 
     downloadDocx(newDocument,fileName);
 }
@@ -29,18 +24,26 @@ function downloadDocx(newDoc: Document, fileName: string){
 
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:'];
+    const newDocument = new Document();
+
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:'];
     let styleFormatList = {};
     let styleTextList = {};
     let data = [], phrase = [];
     let word = "";
-    let commentary = false;
+    let commentary = false, theNextIsAnImage = false;
     for(let i=0; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
             word+=textWrote[i];
             i++;
         }
-        if(commands.includes(word)){
+        if(theNextIsAnImage){
+            console.log("Imagem")
+            theNextIsAnImage = false;
+            
+            // let newImage = Media.addImage(newDocument, fs.readFileSync("https://ichef.bbci.co.uk/news/410/cpsprodpb/3CC7/production/_112395551_eso2008a.jpg"));
+            // data[data.length] = new Paragraph(newImage);
+        }else if(commands.includes(word)){
             if(word==='#:'){ // commentary
                 if(textWrote[i]!=='\n'){
                     commentary = true;
@@ -69,6 +72,9 @@ function buildDataToTheDocument(textWrote: string){
                 styleFormatList = getStyleFormatFrom(word);
                 //get the text style
                 styleTextList = getStyleTextFrom(word);
+                if(word=='#img:'){
+                    theNextIsAnImage = true;
+                }
             }
         }else if(textWrote[i]==='\n'){
             if(!commentary){
@@ -90,7 +96,15 @@ function buildDataToTheDocument(textWrote: string){
     if(!commentary){
         data[data.length] = new Paragraph({children: phrase, ...styleFormatList});
     }
-    return data;
+
+    newDocument.addSection({margins: { //margin of the document
+        top: 1985,  // 3,5cm = 1985
+        right: 1700,  // 3cm = 1700
+        bottom: 1420,  // 2,5cm = 1420
+        left: 1700,  //3cm = 1700
+    },children: data,});
+
+    return newDocument;
 }
 
 //Get the style to the paragraph
@@ -238,6 +252,34 @@ function getStyleFormatFrom(word: string){
                 alignment: AlignmentType.JUSTIFIED,
             }
             break;
+        case '#caption:':
+            styleCreate = {
+                spacing: {
+                    before: 120, // 120 = 6pt
+                    after: 120, // 120 = 6pt 
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 455, // 455 = 0,8 cm
+                    right: 455, // 455 = 0,8 cm
+                },
+                alignment: AlignmentType.CENTER, //if there is more than 1 line, is justified
+            }
+            break;
+        case '#img:':
+            styleCreate = {
+                spacing: {
+                    before: 120, // 120 = 6pt
+                    after: 0,
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, 
+                    right: 0, 
+                },
+                alignment: AlignmentType.CENTER,
+            }
+            break;
         default:
             break;
     }
@@ -321,6 +363,22 @@ function getStyleTextFrom(word: string){
             }
             break;
         case '#ref:':
+            styleCreate = {
+                bold: false,
+                font: "Times",
+                size: 24, //24 = 12 size
+                italics: false,
+            }
+            break;
+        case '#caption:':
+            styleCreate = {
+                bold: true,
+                font: "Helvetica",
+                size: 20, //20 = 10 size
+                italics: false,
+            }
+            break;
+        case '#img:':
             styleCreate = {
                 bold: false,
                 font: "Times",
