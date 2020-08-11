@@ -39,7 +39,11 @@ Wait a minute, developing...
 
 ### 🤔 Future Challenges
 
-1. New templates to format
-2. New extensions to the documents
-3. Put tables, charts and images
-4. Document preview
+1. Put tables, charts and images
+2. Api to manage the templates
+3. New templates to format (ABNT, Vancouver)
+4. Auto translate(abstract->'resumo')
+5. Document preview
+6. Order the sections(subsections, images, tables and charts) automatically
+7. A way to make references easier
+8. New extensions to the documents
