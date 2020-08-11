@@ -17,6 +17,7 @@ textarea{
     min-height: 25rem;
     width: 40rem;
     height: 26rem;
+    overflow: hidden;
 }
 textarea:focus{
     background-color: var(--color-title-in-primary);
