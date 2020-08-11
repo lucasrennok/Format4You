@@ -17,12 +17,14 @@ This project was made with ReactJs in typescript template. The idea is to auto f
 ### :arrow_down_small: Downloads:
 
  > npm install --save-dev react-router-dom @types/react-router-dom react @types/react react-dom @types/react-dom
->
+ >
  > npm install --save-dev docx
->
+ >
  > npm install --save-dev file-saver
->
+ >
  > npm install --save-dev @types/file-saver
+ >
+ > npm install --save-dev fs
 
 ## :abcd: How it works
 Wait a minute, developing...
