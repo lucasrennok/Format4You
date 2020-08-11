@@ -7,7 +7,7 @@ import { genDocxWordWithData } from '../../services/genDocx';
 
 function Writer() {
   // defaultTextArea => template SBC
-  const defaultTextArea = "#title:\n#author:\n#institute:\n#email:\n#abstract: #b: Abstract. #bc:\n#resumo: #b: Resumo. #bc:\n#: \n#: \n#section: 1. First Section\n#: \n#text: Text from the first phrase of the section\n#t: Text in other paragraphs\n#section: 2. References\n#ref: Rennó, L.(2000), \"GitHub: lucasrennok\", http://github.com/lucasrennok, August.\n#: This is a commentary";
+  const defaultTextArea = "#title: Title here\n#author: Name here\n#institute: Institute here\n#email: E-mail here\n#abstract: #b: Abstract. #bc: \n#resumo: #b: Resumo. #bc: \n#section: 1. First Section\n#: \n#text: Text from the first phrase of the section\n#t: Text in other paragraphs\n#img: \'URL_image_here\'\n#caption: Figure 1. This is a caption\n#section: 2. References\n#ref: Rennó, L.(2000), \"GitHub: lucasrennok\", http://github.com/lucasrennok, August.\n#: This is a commentary";
   const [fileName, setFileName] = useState('newDocument');
   const [textInWriter, setTextInWriter] = useState('');
 

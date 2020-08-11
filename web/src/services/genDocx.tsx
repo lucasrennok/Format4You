@@ -1,10 +1,8 @@
-import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent, Media } from 'docx';
+import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent, Media, PictureRun } from 'docx';
 import {saveAs} from 'file-saver';
-import * as fs from 'fs';
 
 //this function generate a document to be downloaded
 export function genDocxWordWithData(fileName: string, textWrote: string){
-
     const newDocument = buildDataToTheDocument(textWrote);
 
     downloadDocx(newDocument,fileName);
@@ -37,12 +35,13 @@ function buildDataToTheDocument(textWrote: string){
             word+=textWrote[i];
             i++;
         }
-        if(theNextIsAnImage){
-            console.log("Imagem")
+        if(theNextIsAnImage){ //If is an image
             theNextIsAnImage = false;
-            
-            // let newImage = Media.addImage(newDocument, fs.readFileSync("https://ichef.bbci.co.uk/news/410/cpsprodpb/3CC7/production/_112395551_eso2008a.jpg"));
-            // data[data.length] = new Paragraph(newImage);
+            const fileImg = fetch(word).then(r => r.blob());
+            //@ts-ignore
+            const newImage = Media.addImage(newDocument, fileImg);
+            // phrase[phrase.length] = new PictureRun(newImage)
+            data[data.length] = new Paragraph(newImage);
         }else if(commands.includes(word)){
             if(word==='#:'){ // commentary
                 if(textWrote[i]!=='\n'){
