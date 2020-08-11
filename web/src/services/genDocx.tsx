@@ -39,9 +39,8 @@ function buildDataToTheDocument(textWrote: string){
             theNextIsAnImage = false;
             const fileImg = fetch(word).then(r => r.blob());
             //@ts-ignore
-            const newImage = Media.addImage(newDocument, fileImg);
-            // phrase[phrase.length] = new PictureRun(newImage)
-            data[data.length] = new Paragraph(newImage);
+            const newImage = Media.addImage(newDocument, fileImg/*,width, height*/); // TODO: resizable
+            data[data.length] = new Paragraph({children: [newImage], ...styleFormatList});
         }else if(commands.includes(word)){
             if(word==='#:'){ // commentary
                 if(textWrote[i]!=='\n'){
