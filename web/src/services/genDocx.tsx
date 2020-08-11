@@ -1,11 +1,16 @@
-import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun } from 'docx';
+import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent } from 'docx';
 import {saveAs} from 'file-saver';
 
 //this function generate a document to be downloaded
 export function genDocxWordWithData(fileName: string, textWrote: string){
     const newDocument = new Document();
 
-    newDocument.addSection({children: buildDataToTheDocument(textWrote),});
+    newDocument.addSection({margins: { //margin of the document
+        top: 1985,  // 3,5cm = 1985
+        right: 1700,  // 3cm = 1700
+        bottom: 1420,  // 2,5cm = 1420
+        left: 1700,  //3cm = 1700
+    },children: buildDataToTheDocument(textWrote),});
 
     downloadDocx(newDocument,fileName);
 }
@@ -24,7 +29,7 @@ function downloadDocx(newDoc: Document, fileName: string){
 
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:'];
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:'];
     let styleFormatList = {};
     let styleTextList = {};
     let data = [], phrase = [];
@@ -36,9 +41,10 @@ function buildDataToTheDocument(textWrote: string){
             i++;
         }
         if(commands.includes(word)){
-            //word diferentes fazem um tipo de formato do paragraph
             if(word==='#:'){ // commentary
-                commentary = true;
+                if(textWrote[i]!=='\n'){
+                    commentary = true;
+                }
             }else if(word==='#n:'){ // \n
                 if(!commentary){
                     data[data.length] = new Paragraph({children: phrase, ...styleFormatList});
@@ -46,7 +52,7 @@ function buildDataToTheDocument(textWrote: string){
                 phrase = []
             }else if(word==='#t:'){ // \t
                 phrase[phrase.length] = new TextRun({text: '\t',...styleTextList})
-            }else if(word==='#b:' || word==='#bc:' || word==='#i:' || word==='#ic:'){
+            }else if(word==='#b:' || word==='#bc:' || word==='#i:' || word==='#ic:'){ // bold and italic
                 if(!commentary){
                     if(word==='#b:'){
                         styleTextList = { ...styleTextList, bold: true}
@@ -59,8 +65,9 @@ function buildDataToTheDocument(textWrote: string){
                     }
                 }
             }else if(!commentary){
-                //get the style
+                //get the paragraph style
                 styleFormatList = getStyleFormatFrom(word);
+                //get the text style
                 styleTextList = getStyleTextFrom(word);
             }
         }else if(textWrote[i]==='\n'){
@@ -86,6 +93,7 @@ function buildDataToTheDocument(textWrote: string){
     return data;
 }
 
+//Get the style to the paragraph
 function getStyleFormatFrom(word: string){
     let styleCreate = {}
     switch(word){
@@ -93,12 +101,12 @@ function getStyleFormatFrom(word: string){
             styleCreate = {
                 spacing: {
                     before: 240, // 240 = 12pt
-                    after: 0, // 240 = 12pt
+                    after: 0, 
                 },
                 indent: {
                     firstLine: 0,
-                    left: 0, // 455 = 0,8cm
-                    right: 0, // 455 = 0,8cm
+                    left: 0, 
+                    right: 0, 
                 },
                 alignment: AlignmentType.CENTER,
             }
@@ -107,12 +115,12 @@ function getStyleFormatFrom(word: string){
             styleCreate = {
                 spacing: {
                     before: 240, // 240 = 12pt
-                    after: 0, // 240 = 12pt
+                    after: 0, 
                 },
                 indent: {
                     firstLine: 0,
-                    left: 0, // 455 = 0,8cm
-                    right: 0, // 455 = 0,8cm
+                    left: 0, 
+                    right: 0, 
                 },
                 alignment: AlignmentType.CENTER,
             }
@@ -121,12 +129,12 @@ function getStyleFormatFrom(word: string){
             styleCreate = {
                 spacing: {
                     before: 240, // 240 = 12pt
-                    after: 0, // 240 = 12pt
+                    after: 0, 
                 },
                 indent: {
                     firstLine: 0,
-                    left: 0, // 455 = 0,8cm
-                    right: 0, // 455 = 0,8cm
+                    left: 0, 
+                    right: 0, 
                 },
                 alignment: AlignmentType.CENTER,
             }
@@ -134,13 +142,13 @@ function getStyleFormatFrom(word: string){
         case '#email:':
             styleCreate = {
                 spacing: {
-                    before: 120, // 240 = 12pt
-                    after: 120, // 240 = 12pt
+                    before: 120, // 120 = 6pt
+                    after: 120, // 120 = 6pt
                 },
                 indent: {
                     firstLine: 0,
-                    left: 0, // 455 = 0,8cm
-                    right: 0, // 455 = 0,8cm
+                    left: 0, 
+                    right: 0, 
                 },
                 alignment: AlignmentType.CENTER,
             }
@@ -148,8 +156,8 @@ function getStyleFormatFrom(word: string){
         case '#abstract:':
             styleCreate = {
                 spacing: {
-                    before: 120, // 240 = 12pt
-                    after: 120, // 240 = 12pt
+                    before: 120, // 120 = 6pt
+                    after: 120, // 120 = 6pt
                 },
                 indent: {
                     firstLine: 0,
@@ -162,8 +170,8 @@ function getStyleFormatFrom(word: string){
         case '#resumo:':
             styleCreate = {
                 spacing: {
-                    before: 120, // 240 = 12pt
-                    after: 120, // 240 = 12pt
+                    before: 120, // 120 = 6pt
+                    after: 120, // 120 = 6pt
                 },
                 indent: {
                     firstLine: 0,
@@ -177,12 +185,12 @@ function getStyleFormatFrom(word: string){
             styleCreate = {
                 spacing: {
                     before: 240, // 240 = 12pt
-                    after: 0, // 240 = 12pt
+                    after: 0, 
                 },
                 indent: {
                     firstLine: 0,
-                    left: 0, // 455 = 0,8cm
-                    right: 0, // 455 = 0,8cm
+                    left: 0, 
+                    right: 0, 
                 },
                 alignment: AlignmentType.LEFT,
             }
@@ -191,12 +199,12 @@ function getStyleFormatFrom(word: string){
             styleCreate = {
                 spacing: {
                     before: 240, // 240 = 12pt
-                    after: 0, // 240 = 12pt
+                    after: 0, 
                 },
                 indent: {
                     firstLine: 0,
-                    left: 0, // 455 = 0,8cm
-                    right: 0, // 455 = 0,8cm
+                    left: 0, 
+                    right: 0, 
                 },
                 alignment: AlignmentType.LEFT,
             }
@@ -204,24 +212,39 @@ function getStyleFormatFrom(word: string){
         case '#text:':
             styleCreate = {
                 spacing: {
-                    before: 120, // 240 = 12pt
-                    after: 0, // 240 = 12pt
+                    before: 120, // 120 = 6pt
+                    after: 0, 
                 },
                 indent: {
                     firstLine: 0,
-                    left: 0, // 455 = 0,8cm
-                    right: 0, // 455 = 0,8cm
+                    left: 0, 
+                    right: 0, 
                 },
-                alignment: AlignmentType.LEFT,
+                alignment: AlignmentType.JUSTIFIED,
+            }
+            break;
+        case '#ref:':
+            styleCreate = {
+                spacing: {
+                    before: 120, // 120 = 6pt
+                    after: 0, 
+                },
+                indent: {
+                    firstLine: 0,
+                    hanging: 285, // 285 = 0,5cm
+                    left: 285, // 285 = 0,5cm
+                    right: 0,
+                },
+                alignment: AlignmentType.JUSTIFIED,
             }
             break;
         default:
             break;
-    // '#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:'];
     }
     return styleCreate;
 }
 
+//Get the style to the text
 function getStyleTextFrom(word: string){
     let styleCreate = {}
     switch(word){
@@ -229,7 +252,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: true,
                 font: "Times",
-                size: 32, // 32 = 16 
+                size: 32, // 32 = 16 size
                 italics: false,
             }
             break;
@@ -237,7 +260,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: true,
                 font: "Times",
-                size: 24,
+                size: 24, // 24 = 12 size
                 italics: false,
             }
             break;
@@ -245,7 +268,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: false,
                 font: "Times",
-                size: 24,
+                size: 24, //24 = 12 size
                 italics: false,
             }
             break;
@@ -253,7 +276,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: false,
                 font: "Courier New",
-                size: 20,
+                size: 20, // 20 = 10 size
                 italics: false,
             }
             break;
@@ -261,7 +284,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: false,
                 font: "Times",
-                size: 24,
+                size: 24, //24 = 12 size
                 italics: true,
             }
             break;
@@ -269,7 +292,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: false,
                 font: "Times",
-                size: 24,
+                size: 24, //24 = 12 size
                 italics: true,
             }
             break;
@@ -277,7 +300,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: true,
                 font: "Times",
-                size: 26,
+                size: 26, //26 = 13 size
                 italics: false,
             }
             break;
@@ -285,7 +308,7 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: true,
                 font: "Times",
-                size: 24,
+                size: 24, //24 = 12 size
                 italics: false,
             }
             break;
@@ -293,13 +316,20 @@ function getStyleTextFrom(word: string){
             styleCreate = {
                 bold: false,
                 font: "Times",
-                size: 24,
+                size: 24, //24 = 12 size
+                italics: false,
+            }
+            break;
+        case '#ref:':
+            styleCreate = {
+                bold: false,
+                font: "Times",
+                size: 24, //24 = 12 size
                 italics: false,
             }
             break;
         default:
             break;
-    // '#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:'];
     }
     return styleCreate;
 }
