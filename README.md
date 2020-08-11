@@ -42,4 +42,3 @@ Wait a minute, developing...
 1. New templates to format
 2. New extensions to the documents
 3. Put tables, charts and images
-4. Format references
