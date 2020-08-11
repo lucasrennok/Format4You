@@ -24,7 +24,6 @@ This project was made with ReactJs in typescript template. The idea is to auto f
  >
  > npm install --save-dev @types/file-saver
  >
- > npm install --save-dev fs
 
 ## :abcd: How it works
 Wait a minute, developing...
