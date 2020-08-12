@@ -36,12 +36,12 @@ function buildDataToTheDocument(textWrote: string){
             i++;
         }
         if(word=='#table:' && !commentary){
-            //get the paragraph style
-            styleFormatList = getStyleFormatFrom(word);
-            //get the text style
-            styleTextList = getStyleTextFrom(word);
-            let table = createTable(textWrote);
-            data[data.length] = table;
+            let response = createTable(textWrote, i);
+            //@ts-ignore
+            data[data.length] = response.table;
+            //@ts-ignore
+            i = response.newIndex;
+            //SOMETHING HERE
         }
         else if(theNextIsAnImage){ //If is an image
             theNextIsAnImage = false;
@@ -59,7 +59,7 @@ function buildDataToTheDocument(textWrote: string){
                     data[data.length] = new Paragraph({children: phrase, ...styleFormatList});
                 }
                 phrase = []
-            }else if(word==='#t:'){ // \t
+            }else if(word==='#t:' && !commentary){ // \t
                 phrase[phrase.length] = new TextRun({text: '\t',...styleTextList})
             }else if(word==='#b:' || word==='#bc:' || word==='#i:' || word==='#ic:'){ // bold and italic
                 if(!commentary){
@@ -113,23 +113,46 @@ function buildDataToTheDocument(textWrote: string){
     return newDocument;
 }
 
-function createTable(textWrote: string){
-    // #table:
-    //     #row: #cel: #celc: #rowc:
-    // #tablec:
+//nothing yet
+function createTable(textWrote: string, index: number){
+    let response = {};
+    let newIndex = index;
+    let word = '', phrase = '';
+    let rows = [];
+    let cels = [];
     
+    //get the paragraph style
+    let styleFormatList = getStyleFormatFrom('#table:');
+    //get the text style
+    let styleTextList = getStyleTextFrom('#table:');
+    
+    for(let i=index; i<textWrote.length; i++){
+        while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
+            word+=textWrote[i];
+            i++;
+        }
+        if(word=='#tablec:'){
+            newIndex = i;
+            break;
+        }else if(word=='#celc:'){
+            cels[cels.length] = new TableCell({
+                                children: [new Paragraph({children:[new TextRun({text: phrase, ...styleTextList})],})],
+                            });
+            phrase = ''
+        }else if(word=='#rowc:'){
+            rows[rows.length] = new TableRow({children: cels})
+            cels = []
+        }else{
+            phrase+=word;
+        }
+        word='';
+    }
     const table = new Table({
-        rows: [
-            new TableRow({
-                children: [
-                    new TableCell({
-                        children: [new Paragraph("hello")],
-                    }),
-                ],
-            }),
-        ],
+        rows: rows,
+        ...styleFormatList,
     });
-    return table;
+    response = {newIndex: newIndex, table: table}
+    return response;
 }
 
 //Get the style to the paragraph
