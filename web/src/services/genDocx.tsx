@@ -1,4 +1,4 @@
-import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent, Media, PictureRun, TableCell, TableRow, Table } from 'docx';
+import {Packer, AlignmentType,Document, Paragraph, TextRun, Media, TableCell, TableRow, Table } from 'docx';
 import {saveAs} from 'file-saver';
 
 //this function generate a document to be downloaded
@@ -24,12 +24,12 @@ function downloadDocx(newDoc: Document, fileName: string){
 function buildDataToTheDocument(textWrote: string){
     const newDocument = new Document();
 
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:','#table-title-justified:','#table:'];
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:','#table-title-justified:','#table:', '#order:'];
     let styleFormatList = {};
     let styleTextList = {};
     let data = [], phrase = [];
-    let word = "";
-    let commentary = false, theNextIsAnImage = false;
+    let word = "", sectionNum=1, subsecNum=1, pictureNum=1, tableNum=1;
+    let commentary = false, theNextIsAnImage = false, orderThings = false;
     for(let i=0; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
             word+=textWrote[i];
@@ -41,12 +41,23 @@ function buildDataToTheDocument(textWrote: string){
             data[data.length] = response.table;
             //@ts-ignore
             i = response.newIndex;
-        }
-        else if(theNextIsAnImage){ //If is an image
+        }else if(word==='#order:' && !commentary){
+            i++;
+            let orderString = ''
+            while(textWrote[i]!=='\n' && i<textWrote.length){
+                orderString+=textWrote[i];
+                i++;
+            }
+            if(orderString==='TRUE' || orderString==='True' || orderString==='true' || orderString==='T' || orderString==='t'){
+                orderThings=true;
+            }else{
+                orderThings=false;
+            }
+        }else if(theNextIsAnImage){ //If is an image
             let width = 0, height = 0, newSize='';
             theNextIsAnImage = false;
             const fileImg = fetch(word).then(r => r.blob());
-            if(textWrote[i]!='\n'){ // Resizable
+            if(textWrote[i]!=='\n'){ // Resizable
                 i++;
                 while(textWrote[i]!==' ' && textWrote[i]!=='\n'){
                     newSize+=textWrote[i];
@@ -60,7 +71,7 @@ function buildDataToTheDocument(textWrote: string){
                 }
                 if(newSize===''){
                     height=width;
-                    newSize='flag';
+                    newSize='flag'; //something to continue
                 }else{
                     height=Number(newSize);
                 }
@@ -103,6 +114,22 @@ function buildDataToTheDocument(textWrote: string){
                 styleFormatList = getStyleFormatFrom(word);
                 //get the text style
                 styleTextList = getStyleTextFrom(word);
+                if(orderThings){
+                    if(word==='#caption:' || word==='#caption-justified:'){
+                        phrase[phrase.length] = new TextRun({text: 'Picture '+pictureNum+'. ', ...styleTextList})
+                        pictureNum++;
+                    }else if(word==='#table-title:' || word==='#table-title-justified:'){
+                        phrase[phrase.length] = new TextRun({text: 'Table '+tableNum+'. ', ...styleTextList})
+                        tableNum++;
+                    }else if(word==='#section:'){
+                        subsecNum=1;
+                        phrase[phrase.length] = new TextRun({text: sectionNum+'. ', ...styleTextList})
+                        sectionNum++;
+                    }else if(word==='#subsec:'){
+                        phrase[phrase.length] = new TextRun({text: sectionNum+'.'+subsecNum+'. ', ...styleTextList})
+                        subsecNum++;
+                    }
+                }
                 if(word==='#img:'){
                     theNextIsAnImage = true;
                 }
