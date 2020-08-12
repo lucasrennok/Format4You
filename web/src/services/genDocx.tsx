@@ -137,12 +137,15 @@ function createTable(textWrote: string, index: number){
             cels[cels.length] = new TableCell({
                                 children: [new Paragraph({children:[new TextRun({text: phrase, ...styleTextList})],})],
                             });
-            phrase = ''
+            phrase = '';
         }else if(word==='#rowc:'){
-            rows[rows.length] = new TableRow({children: cels})
-            cels = []
+            rows[rows.length] = new TableRow({children: cels});
+            cels = [];
         }else{
             phrase+=word;
+            if(textWrote[i]!=='\n'){
+                phrase+=textWrote[i];
+            }
         }
         word='';
     }
