@@ -1,4 +1,4 @@
-import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent, Media, PictureRun } from 'docx';
+import {Packer, AlignmentType, PageBorders,Document, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun, SymbolRun, Indent, Media, PictureRun, TableCell, TableRow, Table } from 'docx';
 import {saveAs} from 'file-saver';
 
 //this function generate a document to be downloaded
@@ -24,7 +24,7 @@ function downloadDocx(newDoc: Document, fileName: string){
 function buildDataToTheDocument(textWrote: string){
     const newDocument = new Document();
 
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#table-title:','#table-title-justified:'];
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:','#table-title-justified:','#table:'];
     let styleFormatList = {};
     let styleTextList = {};
     let data = [], phrase = [];
@@ -35,7 +35,15 @@ function buildDataToTheDocument(textWrote: string){
             word+=textWrote[i];
             i++;
         }
-        if(theNextIsAnImage){ //If is an image
+        if(word=='#table:' && !commentary){
+            //get the paragraph style
+            styleFormatList = getStyleFormatFrom(word);
+            //get the text style
+            styleTextList = getStyleTextFrom(word);
+            let table = createTable(textWrote);
+            data[data.length] = table;
+        }
+        else if(theNextIsAnImage){ //If is an image
             theNextIsAnImage = false;
             const fileImg = fetch(word).then(r => r.blob());
             //@ts-ignore
@@ -70,7 +78,7 @@ function buildDataToTheDocument(textWrote: string){
                 styleFormatList = getStyleFormatFrom(word);
                 //get the text style
                 styleTextList = getStyleTextFrom(word);
-                if(word=='#img:'){
+                if(word==='#img:'){
                     theNextIsAnImage = true;
                 }
             }
@@ -103,6 +111,25 @@ function buildDataToTheDocument(textWrote: string){
     },children: data,});
 
     return newDocument;
+}
+
+function createTable(textWrote: string){
+    // #table:
+    //     #row: #cel: #celc: #rowc:
+    // #tablec:
+    
+    const table = new Table({
+        rows: [
+            new TableRow({
+                children: [
+                    new TableCell({
+                        children: [new Paragraph("hello")],
+                    }),
+                ],
+            }),
+        ],
+    });
+    return table;
 }
 
 //Get the style to the paragraph
@@ -320,6 +347,20 @@ function getStyleFormatFrom(word: string){
                 alignment: AlignmentType.JUSTIFIED,
             }
             break;
+        case '#table:': 
+            styleCreate = {
+                spacing: {
+                    before: 120, // 120 = 6pt
+                    after: 0, 
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 0, 
+                    right: 0, 
+                },
+                alignment: AlignmentType.CENTER,
+            }
+            break;
         default:
             break;
     }
@@ -447,6 +488,14 @@ function getStyleTextFrom(word: string){
                 bold: true,
                 font: "Helvetica",
                 size: 20, //20 = 10 size
+                italics: false,
+            }
+            break;
+        case '#table:':
+            styleCreate = {
+                bold: false,
+                font: "Times",
+                size: 24, //24 = 12 size
                 italics: false,
             }
             break;
