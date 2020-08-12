@@ -35,13 +35,12 @@ function buildDataToTheDocument(textWrote: string){
             word+=textWrote[i];
             i++;
         }
-        if(word=='#table:' && !commentary){
+        if(word==='#table:' && !commentary){
             let response = createTable(textWrote, i);
             //@ts-ignore
             data[data.length] = response.table;
             //@ts-ignore
             i = response.newIndex;
-            //SOMETHING HERE
         }
         else if(theNextIsAnImage){ //If is an image
             theNextIsAnImage = false;
@@ -113,7 +112,7 @@ function buildDataToTheDocument(textWrote: string){
     return newDocument;
 }
 
-//nothing yet
+//Create the table
 function createTable(textWrote: string, index: number){
     let response = {};
     let newIndex = index;
@@ -131,15 +130,15 @@ function createTable(textWrote: string, index: number){
             word+=textWrote[i];
             i++;
         }
-        if(word=='#tablec:'){
+        if(word==='#tablec:'){
             newIndex = i;
             break;
-        }else if(word=='#celc:'){
+        }else if(word==='#celc:'){
             cels[cels.length] = new TableCell({
                                 children: [new Paragraph({children:[new TextRun({text: phrase, ...styleTextList})],})],
                             });
             phrase = ''
-        }else if(word=='#rowc:'){
+        }else if(word==='#rowc:'){
             rows[rows.length] = new TableRow({children: cels})
             cels = []
         }else{
