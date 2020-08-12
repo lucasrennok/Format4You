@@ -40,11 +40,14 @@ Wait a minute, developing...
 
 ### 🤔 Future Challenges
 
-1. Put tables, charts and images
-2. Api to manage the templates
-3. New templates to format (ABNT, Vancouver)
-4. Auto translate(abstract->'resumo')
-5. Document preview
-6. Order the sections(subsections, images, tables and charts) automatically
-7. A way to make references easier
-8. New extensions to the documents
+1. [x] Put tables and images(charts and pictures)
+2. [x] Order the sections(subsections, images, tables and charts) automatically
+3. [ ] References in ABNT
+4. [ ] A way to make references easier
+5. [ ] Api to manage the templates
+6. [ ] Auto translate(abstract->'resumo')
+7. [ ] Document preview
+8. [ ] New templates to format
+9. [ ] New extensions to the documents(DOCX -> ODT -> PDF -> script.txt)
+
+**Take a screenshot of your chart to put in the document, charts will be treated like images with '#img:'**
