@@ -43,10 +43,36 @@ function buildDataToTheDocument(textWrote: string){
             i = response.newIndex;
         }
         else if(theNextIsAnImage){ //If is an image
+            let width = 0, height = 0, newSize='';
             theNextIsAnImage = false;
             const fileImg = fetch(word).then(r => r.blob());
-            //@ts-ignore
-            const newImage = Media.addImage(newDocument, fileImg/*,width, height*/); // TODO: resizable
+            if(textWrote[i]!='\n'){ // Resizable
+                i++;
+                while(textWrote[i]!==' ' && textWrote[i]!=='\n'){
+                    newSize+=textWrote[i];
+                    i++;
+                }
+                width=Number(newSize);
+                newSize='';
+                while(textWrote[i]!=='\n'){
+                    newSize+=textWrote[i];
+                    i++;
+                }
+                if(newSize===''){
+                    height=width;
+                    newSize='flag';
+                }else{
+                    height=Number(newSize);
+                }
+            }
+            let newImage;
+            if(newSize!==''){
+                //@ts-ignore
+                newImage = Media.addImage(newDocument, fileImg,width, height); 
+            }else{
+                //@ts-ignore
+                newImage = Media.addImage(newDocument, fileImg);
+            }
             data[data.length] = new Paragraph({children: [newImage], ...styleFormatList});
         }else if(commands.includes(word)){
             if(word==='#:'){ // commentary
