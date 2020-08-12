@@ -24,7 +24,7 @@ function downloadDocx(newDoc: Document, fileName: string){
 function buildDataToTheDocument(textWrote: string){
     const newDocument = new Document();
 
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:'];
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#table-title:','#table-title-justified:'];
     let styleFormatList = {};
     let styleTextList = {};
     let data = [], phrase = [];
@@ -250,7 +250,7 @@ function getStyleFormatFrom(word: string){
                 alignment: AlignmentType.JUSTIFIED,
             }
             break;
-        case '#caption:':
+        case '#caption:': // for one line caption
             styleCreate = {
                 spacing: {
                     before: 120, // 120 = 6pt
@@ -262,6 +262,20 @@ function getStyleFormatFrom(word: string){
                     right: 455, // 455 = 0,8 cm
                 },
                 alignment: AlignmentType.CENTER, //if there is more than 1 line, is justified
+            }
+            break;
+        case '#caption-justified:':   //for two or more line captions
+            styleCreate = { 
+                spacing: {
+                    before: 120, // 120 = 6pt
+                    after: 120, // 120 = 6pt 
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 455, // 455 = 0,8 cm
+                    right: 455, // 455 = 0,8 cm
+                },
+                alignment: AlignmentType.JUSTIFIED, //if there is more than 1 line, is justified
             }
             break;
         case '#img:':
@@ -276,6 +290,34 @@ function getStyleFormatFrom(word: string){
                     right: 0, 
                 },
                 alignment: AlignmentType.CENTER,
+            }
+            break;
+        case '#table-title:': //for one line titles
+            styleCreate = {
+                spacing: {
+                    before: 120, // 120 = 6pt
+                    after: 120, // 120 = 6pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 455, // 455 = 0,8cm
+                    right: 455, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.CENTER,
+            }
+            break;
+        case '#table-title-justified:': //for two or more line titles
+            styleCreate = {
+                spacing: {
+                    before: 120, // 120 = 6pt
+                    after: 120, // 120 = 6pt
+                },
+                indent: {
+                    firstLine: 0,
+                    left: 455, // 455 = 0,8cm
+                    right: 455, // 455 = 0,8cm
+                },
+                alignment: AlignmentType.JUSTIFIED,
             }
             break;
         default:
@@ -376,11 +418,35 @@ function getStyleTextFrom(word: string){
                 italics: false,
             }
             break;
+        case '#caption-justified:':
+            styleCreate = {
+                bold: true,
+                font: "Helvetica",
+                size: 20, //20 = 10 size
+                italics: false,
+            }
+            break;
         case '#img:':
             styleCreate = {
                 bold: false,
                 font: "Times",
                 size: 24, //24 = 12 size
+                italics: false,
+            }
+            break;
+        case '#table-title:':
+            styleCreate = {
+                bold: true,
+                font: "Helvetica",
+                size: 20, //20 = 10 size
+                italics: false,
+            }
+            break;
+        case '#table-title-justified:':
+            styleCreate = {
+                bold: true,
+                font: "Helvetica",
+                size: 20, //20 = 10 size
                 italics: false,
             }
             break;
