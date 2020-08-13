@@ -1,6 +1,9 @@
 import {Packer, AlignmentType,Document, Paragraph, TextRun, Media, TableCell, TableRow, Table } from 'docx';
 import {saveAs} from 'file-saver';
 
+//this next import will be used in the future
+import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
+
 //this function generate a document to be downloaded
 export function genDocxWordWithData(fileName: string, textWrote: string){
     const newDocument = buildDataToTheDocument(textWrote);
