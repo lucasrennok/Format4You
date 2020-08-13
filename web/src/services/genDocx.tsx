@@ -27,23 +27,26 @@ function downloadDocx(newDoc: Document, fileName: string){
 function buildDataToTheDocument(textWrote: string){
     const newDocument = new Document();
 
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:','#table-title-justified:','#table:', '#order:'];
+    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:','#table-title-justified:','#table:'];
     let styleFormatList = {};
     let styleTextList = {};
     let data = [], phrase = [];
-    let word = "", sectionNum=1, subsecNum=1, pictureNum=1, tableNum=1;
+    let word = "", sectionNum=1, subsecNum=1, pictureNum=1, tableNum=1, templateName='';
     let commentary = false, theNextIsAnImage = false, orderThings = false;
     for(let i=0; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
             word+=textWrote[i];
             i++;
         }
-        if(word==='#table:' && !commentary){
-            let response = createTable(textWrote, i);
-            //@ts-ignore
-            data[data.length] = response.table;
-            //@ts-ignore
-            i = response.newIndex;
+        if(word==='#template:' && !commentary){ // to use with the api in the future
+            i++;
+            if(templateName!==''){
+                templateName='';
+            }
+            while(textWrote[i]!=='\n' && i<textWrote.length){
+                templateName+=textWrote[i];
+                i++;
+            }
         }else if(word==='#order:' && !commentary){
             i++;
             let orderString = ''
@@ -56,6 +59,12 @@ function buildDataToTheDocument(textWrote: string){
             }else{
                 orderThings=false;
             }
+        }else if(word==='#table:' && !commentary){
+            let response = createTable(textWrote, i);
+            //@ts-ignore
+            data[data.length] = response.table;
+            //@ts-ignore
+            i = response.newIndex;
         }else if(theNextIsAnImage){ //If is an image
             let width = 0, height = 0, newSize='';
             theNextIsAnImage = false;
