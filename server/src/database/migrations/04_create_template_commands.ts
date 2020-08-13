@@ -2,8 +2,9 @@ import Knex from 'knex';
 
 export async function up(knex: Knex){
     return knex.schema.createTable('template_commands', table => {
-        table.string('template').notNullable();
-        table.string('command').notNullable();
+        table.string('template').notNullable(); //template name
+        table.string('command').notNullable();  // #somethinghere: or something different
+        table.string('command_type').notNullable(); // title, normal text, references, section...
 
         table.primary(['template','command']);
 

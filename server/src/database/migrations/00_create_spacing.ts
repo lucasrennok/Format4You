@@ -35,5 +35,6 @@ export async function down(knex: Knex){
 
 //template_commands = command_name and foreign keys to text_styles and format_styles
     // command_name + template_name = pk
+    // command_type (example: title, normal_text, caption)
     // text_stylesFK
     // format_stylesFK
