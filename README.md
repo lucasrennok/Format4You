@@ -16,6 +16,8 @@ This project was made with ReactJs in typescript template. The idea is to auto f
 
 ### :arrow_down_small: Downloads:
 
+**WEB:**
+
  > npm install --save-dev react-router-dom @types/react-router-dom react @types/react react-dom @types/react-dom
  >
  > npm install --save-dev docx
@@ -23,6 +25,12 @@ This project was made with ReactJs in typescript template. The idea is to auto f
  > npm install --save-dev file-saver
  >
  > npm install --save-dev @types/file-saver
+ >
+
+**SERVER:**
+
+ > yarn add ts-node-dev -D
+ >
  >
 
 ## :abcd: How it works
