@@ -27,23 +27,30 @@ function downloadDocx(newDoc: Document, fileName: string){
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
     const newDocument = new Document();
-
-    api.get('template/commands?template=sbc').then(response => {
-        console.log(response.data.allcommands);
-    })
-
-    const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:','#table-title-justified:','#table:'];
+    
+    const fixedCommands = ['#:','#b:','#bc:','#i:','#ic:','#n','#t']; //are all fixed commands
+    let commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#section:',
+    '#subsec:','#text:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:',
+    '#table-title-justified:','#table:'];   // default commands(can be changed by a new template)
     let styleFormatList = {};
     let styleTextList = {};
     let data = [], phrase = [];
-    let word = "", sectionNum=1, subsecNum=1, pictureNum=1, tableNum=1, templateName='';
+    let word = "", sectionNum=1, subsecNum=1, pictureNum=1, tableNum=1, templateName='sbc'; //default template
     let commentary = false, theNextIsAnImage = false, orderThings = false;
+    
+    //Default Settings
+    let captionDefault='#caption:', bigCaptionDefault='#caption-justified:';
+    let tableTitleDefault='#table-title:', bigTableTitleDefault='#table-title-justified:';
+    let sectionDefault='#section:', subsecDefault='#subsec:';
+    let imgDefault = '#img:';    
+    let tableDefault = '#table:';  
+    
     for(let i=0; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
             word+=textWrote[i];
             i++;
         }
-        if(word==='#template:' && !commentary){ // to use with the api in the future
+        if(word==='#template:' && !commentary){ // #template: is a fixed command
             i++;
             if(templateName!==''){
                 templateName='';
@@ -52,7 +59,34 @@ function buildDataToTheDocument(textWrote: string){
                 templateName+=textWrote[i];
                 i++;
             }
-        }else if(word==='#order:' && !commentary){
+            api.get('template/commands?template='+templateName).then(response => {
+                commands = response.data.allcommands;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=table').then(response => {
+                tableDefault = response.data.command;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=image').then(response => {
+                imgDefault = response.data.command;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=caption').then(response => {
+                captionDefault = response.data.command;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=bigcaption').then(response => {
+                bigCaptionDefault = response.data.command;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=tabletitle').then(response => {
+                tableTitleDefault = response.data.command;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=bigtabletitle').then(response => {
+                bigTableTitleDefault = response.data.command;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=section').then(response => {
+                sectionDefault = response.data.command;
+            });
+            api.get('template/command/type?template='+templateName+'&commandtype=subsection').then(response => {
+                subsecDefault = response.data.command;
+            });
+        }else if(word==='#order:' && !commentary){ // #order: is a fixed command
             i++;
             let orderString = ''
             while(textWrote[i]!=='\n' && i<textWrote.length){
@@ -64,8 +98,8 @@ function buildDataToTheDocument(textWrote: string){
             }else{
                 orderThings=false;
             }
-        }else if(word==='#table:' && !commentary){
-            let response = createTable(textWrote, i);
+        }else if(word===tableDefault && !commentary){
+            let response = createTable(textWrote, i, templateName, tableDefault);
             //@ts-ignore
             data[data.length] = response.table;
             //@ts-ignore
@@ -102,7 +136,7 @@ function buildDataToTheDocument(textWrote: string){
                 newImage = Media.addImage(newDocument, fileImg);
             }
             data[data.length] = new Paragraph({children: [newImage], ...styleFormatList});
-        }else if(commands.includes(word)){
+        }else if(fixedCommands.includes(word) || commands.includes(word)){
             if(word==='#:'){ // commentary
                 if(textWrote[i]!=='\n'){
                     commentary = true;
@@ -128,26 +162,26 @@ function buildDataToTheDocument(textWrote: string){
                 }
             }else if(!commentary){
                 //get the paragraph style
-                styleFormatList = getStyleFormatFrom(word);
+                styleFormatList = getStyleFormatFrom(templateName, word);
                 //get the text style
-                styleTextList = getStyleTextFrom(word);
+                styleTextList = getStyleTextFrom(templateName, word);
                 if(orderThings){
-                    if(word==='#caption:' || word==='#caption-justified:'){
+                    if(word===captionDefault || word===bigCaptionDefault){
                         phrase[phrase.length] = new TextRun({text: 'Picture '+pictureNum+'. ', ...styleTextList})
                         pictureNum++;
-                    }else if(word==='#table-title:' || word==='#table-title-justified:'){
+                    }else if(word===tableTitleDefault || word===bigTableTitleDefault){
                         phrase[phrase.length] = new TextRun({text: 'Table '+tableNum+'. ', ...styleTextList})
                         tableNum++;
-                    }else if(word==='#section:'){
+                    }else if(word===sectionDefault){
                         subsecNum=1;
                         phrase[phrase.length] = new TextRun({text: sectionNum+'. ', ...styleTextList})
                         sectionNum++;
-                    }else if(word==='#subsec:'){
+                    }else if(word===subsecDefault){
                         phrase[phrase.length] = new TextRun({text: sectionNum+'.'+subsecNum+'. ', ...styleTextList})
                         subsecNum++;
                     }
                 }
-                if(word==='#img:'){
+                if(word===imgDefault){
                     theNextIsAnImage = true;
                 }
             }
@@ -183,7 +217,7 @@ function buildDataToTheDocument(textWrote: string){
 }
 
 //Create the table
-function createTable(textWrote: string, index: number){
+function createTable(textWrote: string, index: number, templateName: string, tableCommand: string){
     let response = {};
     let newIndex = index;
     let word = '', phrase = '';
@@ -191,24 +225,24 @@ function createTable(textWrote: string, index: number){
     let cels = [];
     
     //get the paragraph style
-    let styleFormatList = getStyleFormatFrom('#table:');
+    let styleFormatList = getStyleFormatFrom(templateName, tableCommand);
     //get the text style
-    let styleTextList = getStyleTextFrom('#table:');
+    let styleTextList = getStyleTextFrom(templateName, tableCommand);
     
     for(let i=index; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
             word+=textWrote[i];
             i++;
         }
-        if(word==='#tablec:'){
+        if(word==='#tablec:'){  //for a while, this command will be constant
             newIndex = i;
             break;
-        }else if(word==='#celc:'){
+        }else if(word==='#celc:'){ //for a while, this command will be constant
             cels[cels.length] = new TableCell({
                                 children: [new Paragraph({children:[new TextRun({text: phrase, ...styleTextList})],})],
                             });
             phrase = '';
-        }else if(word==='#rowc:'){
+        }else if(word==='#rowc:'){ //for a while, this command will be constant
             rows[rows.length] = new TableRow({children: cels});
             cels = [];
         }else{
@@ -228,7 +262,7 @@ function createTable(textWrote: string, index: number){
 }
 
 //Get the style to the paragraph
-function getStyleFormatFrom(word: string){
+function getStyleFormatFrom(templateName: string, word: string){
     let styleCreate = {}
     switch(word){
         case '#title:':
@@ -463,7 +497,7 @@ function getStyleFormatFrom(word: string){
 }
 
 //Get the style to the text
-function getStyleTextFrom(word: string){
+function getStyleTextFrom(templateName: string, word: string){
     let styleCreate = {}
     switch(word){
         case '#title:':
