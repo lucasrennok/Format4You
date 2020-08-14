@@ -29,9 +29,17 @@ This project was made with ReactJs in typescript template. The idea is to auto f
 
 **SERVER:**
 
+ > yarn add express
+ >
+ > yarn add @types/express
+ >
  > yarn add ts-node-dev -D
  >
+ > yarn add knex sqlite3
  >
+ > yarn add cors
+ >
+ > yarn add @types/cors
 
 ## :abcd: How it works
 Wait a minute, developing...
