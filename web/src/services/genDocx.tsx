@@ -3,6 +3,7 @@ import {saveAs} from 'file-saver';
 
 //this next import will be used in the future
 import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
+import api from './api';
 
 //this function generate a document to be downloaded
 export function genDocxWordWithData(fileName: string, textWrote: string){
@@ -26,6 +27,10 @@ function downloadDocx(newDoc: Document, fileName: string){
 //This function build the data to the document
 function buildDataToTheDocument(textWrote: string){
     const newDocument = new Document();
+
+    api.get('template/commands?template=sbc').then(response => {
+        console.log(response.data.allcommands);
+    })
 
     const commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#n:','#t:','#section:','#subsec:','#text:','#:','#b:', '#bc:','#i:', '#ic:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:','#table-title-justified:','#table:'];
     let styleFormatList = {};

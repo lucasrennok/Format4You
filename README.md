@@ -26,6 +26,9 @@ This project was made with ReactJs in typescript template. The idea is to auto f
  >
  > npm install --save-dev @types/file-saver
  >
+ > yarn add axios
+ >
+ > yarn add @types/axios
 
 **SERVER:**
 
