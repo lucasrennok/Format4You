@@ -56,6 +56,17 @@ export default class TemplatesCommandsController{
         return response.json({...alignmentStyleOfCommand[0],spacing: spacingStyleOfCommand[0], indent: indentStyleOfCommand[0]});
     }
 
+    async getCommandFromType(request: Request, response: Response){
+        const {template, commandtype} = request.query;
+
+        const command = await db('template_commands')
+            .where('template', '=', template as string)
+            .where('command_type', '=', commandtype as string)
+            .select('command')
+
+        return response.json(command[0]);
+    }
+
     async create(request: Request, response: Response){
         const {
             template,
