@@ -4,7 +4,7 @@ import PageHeader from '../../components/PageHeader/PageHeader';
 
 import './styles.css'
 import PageFooter from '../../components/PageFooter/PageFooter';
-import { genDocxWordWithData } from '../../services/genDocx';
+import {genDocxWordWithData} from '../../services/genDocx';
 
 function Writer() {
   // defaultTextArea => template SBC
@@ -23,7 +23,7 @@ function Writer() {
     setFileName(e.target.value);
   }
 
-  function getData(){
+  const getData = () => {
     genDocxWordWithData(fileName, textInWriter);
   }
   

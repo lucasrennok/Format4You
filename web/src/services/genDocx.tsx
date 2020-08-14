@@ -1,19 +1,19 @@
-import {Packer, AlignmentType,Document, Paragraph, TextRun, Media, TableCell, TableRow, Table } from 'docx';
+import {Packer, Document, Paragraph, TextRun, Media, TableCell, TableRow, Table } from 'docx';
 import {saveAs} from 'file-saver';
 
 //this next import will be used in the future
-import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
+//import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
 import api from './api';
 
 //this function generate a document to be downloaded
-export function genDocxWordWithData(fileName: string, textWrote: string){
-    const newDocument = buildDataToTheDocument(textWrote);
+export const genDocxWordWithData = async (fileName: string, textWrote: string) => {
+    const newDocument = await buildDataToTheDocument(textWrote);
 
     downloadDocx(newDocument,fileName);
 }
 
 //Here the user download the document
-function downloadDocx(newDoc: Document, fileName: string){
+const downloadDocx = (newDoc: Document, fileName: string) => {
     if(fileName===""){
         fileName="newDoc";
     }
@@ -25,7 +25,7 @@ function downloadDocx(newDoc: Document, fileName: string){
 }
 
 //This function build the data to the document
-function buildDataToTheDocument(textWrote: string){
+const buildDataToTheDocument = async (textWrote: string) => {
     const newDocument = new Document();
     
     const fixedCommands = ['#:','#b:','#bc:','#i:','#ic:','#n','#t']; //are all fixed commands
@@ -59,31 +59,32 @@ function buildDataToTheDocument(textWrote: string){
                 templateName+=textWrote[i];
                 i++;
             }
-            api.get('template/commands?template='+templateName).then(response => {
+            let urlTemplateName = encodeURI(templateName);
+            await api.get('template/commands?template='+urlTemplateName).then(response => {
                 commands = response.data.allcommands;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=table').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=table').then(response => {
                 tableDefault = response.data.command;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=image').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=image').then(response => {
                 imgDefault = response.data.command;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=caption').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=caption').then(response => {
                 captionDefault = response.data.command;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=bigcaption').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=bigcaption').then(response => {
                 bigCaptionDefault = response.data.command;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=tabletitle').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=tabletitle').then(response => {
                 tableTitleDefault = response.data.command;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=bigtabletitle').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=bigtabletitle').then(response => {
                 bigTableTitleDefault = response.data.command;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=section').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=section').then(response => {
                 sectionDefault = response.data.command;
             });
-            api.get('template/command/type?template='+templateName+'&commandtype=subsection').then(response => {
+            await api.get('template/command/type?template='+urlTemplateName+'&commandtype=subsection').then(response => {
                 subsecDefault = response.data.command;
             });
         }else if(word==='#order:' && !commentary){ // #order: is a fixed command
@@ -99,7 +100,7 @@ function buildDataToTheDocument(textWrote: string){
                 orderThings=false;
             }
         }else if(word===tableDefault && !commentary){
-            let response = createTable(textWrote, i, templateName, tableDefault);
+            let response = await createTable(textWrote, i, templateName, tableDefault);
             //@ts-ignore
             data[data.length] = response.table;
             //@ts-ignore
@@ -107,7 +108,7 @@ function buildDataToTheDocument(textWrote: string){
         }else if(theNextIsAnImage){ //If is an image
             let width = 0, height = 0, newSize='';
             theNextIsAnImage = false;
-            const fileImg = fetch(word).then(r => r.blob());
+            const fileImg = await fetch(word).then(r => r.blob());
             if(textWrote[i]!=='\n'){ // Resizable
                 i++;
                 while(textWrote[i]!==' ' && textWrote[i]!=='\n'){
@@ -162,9 +163,9 @@ function buildDataToTheDocument(textWrote: string){
                 }
             }else if(!commentary){
                 //get the paragraph style
-                styleFormatList = getStyleFormatFrom(templateName, word);
+                styleFormatList = await getStyleFormatFrom(templateName, word);
                 //get the text style
-                styleTextList = getStyleTextFrom(templateName, word);
+                styleTextList = await getStyleTextFrom(templateName, word);
                 if(orderThings){
                     if(word===captionDefault || word===bigCaptionDefault){
                         phrase[phrase.length] = new TextRun({text: 'Picture '+pictureNum+'. ', ...styleTextList})
@@ -217,7 +218,7 @@ function buildDataToTheDocument(textWrote: string){
 }
 
 //Create the table
-function createTable(textWrote: string, index: number, templateName: string, tableCommand: string){
+const createTable = async (textWrote: string, index: number, templateName: string, tableCommand: string) => {
     let response = {};
     let newIndex = index;
     let word = '', phrase = '';
@@ -225,9 +226,9 @@ function createTable(textWrote: string, index: number, templateName: string, tab
     let cels = [];
     
     //get the paragraph style
-    let styleFormatList = getStyleFormatFrom(templateName, tableCommand);
+    let styleFormatList = await getStyleFormatFrom(templateName, tableCommand);
     //get the text style
-    let styleTextList = getStyleTextFrom(templateName, tableCommand);
+    let styleTextList = await getStyleTextFrom(templateName, tableCommand);
     
     for(let i=index; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
@@ -262,374 +263,23 @@ function createTable(textWrote: string, index: number, templateName: string, tab
 }
 
 //Get the style to the paragraph
-function getStyleFormatFrom(templateName: string, word: string){
-    let styleCreate = {}
-    switch(word){
-        case '#title:':
-            styleCreate = {
-                spacing: {
-                    before: 240, // 240 = 12pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.CENTER,
-            }
-            break;
-        case '#author:':
-            styleCreate = {
-                spacing: {
-                    before: 240, // 240 = 12pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.CENTER,
-            }
-            break;
-        case '#institute:':
-            styleCreate = {
-                spacing: {
-                    before: 240, // 240 = 12pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.CENTER,
-            }
-            break;
-        case '#email:':
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 120, // 120 = 6pt
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.CENTER,
-            }
-            break;
-        case '#abstract:':
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 120, // 120 = 6pt
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 455, // 455 = 0,8cm
-                    right: 455, // 455 = 0,8cm
-                },
-                alignment: AlignmentType.JUSTIFIED,
-            }
-            break;
-        case '#resumo:':
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 120, // 120 = 6pt
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 455, // 455 = 0,8cm
-                    right: 455, // 455 = 0,8cm
-                },
-                alignment: AlignmentType.JUSTIFIED,
-            }
-            break;
-        case '#section:':
-            styleCreate = {
-                spacing: {
-                    before: 240, // 240 = 12pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.LEFT,
-            }
-            break;
-        case '#subsec:':
-            styleCreate = {
-                spacing: {
-                    before: 240, // 240 = 12pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.LEFT,
-            }
-            break;
-        case '#text:':
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.JUSTIFIED,
-            }
-            break;
-        case '#ref:':
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    hanging: 285, // 285 = 0,5cm
-                    left: 285, // 285 = 0,5cm
-                    right: 0,
-                },
-                alignment: AlignmentType.JUSTIFIED,
-            }
-            break;
-        case '#caption:': // for one line caption
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 120, // 120 = 6pt 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 455, // 455 = 0,8 cm
-                    right: 455, // 455 = 0,8 cm
-                },
-                alignment: AlignmentType.CENTER, //if there is more than 1 line, is justified
-            }
-            break;
-        case '#caption-justified:':   //for two or more line captions
-            styleCreate = { 
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 120, // 120 = 6pt 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 455, // 455 = 0,8 cm
-                    right: 455, // 455 = 0,8 cm
-                },
-                alignment: AlignmentType.JUSTIFIED, //if there is more than 1 line, is justified
-            }
-            break;
-        case '#img:':
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 0,
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.CENTER,
-            }
-            break;
-        case '#table-title:': //for one line titles
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 120, // 120 = 6pt
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 455, // 455 = 0,8cm
-                    right: 455, // 455 = 0,8cm
-                },
-                alignment: AlignmentType.CENTER,
-            }
-            break;
-        case '#table-title-justified:': //for two or more line titles
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 120, // 120 = 6pt
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 455, // 455 = 0,8cm
-                    right: 455, // 455 = 0,8cm
-                },
-                alignment: AlignmentType.JUSTIFIED,
-            }
-            break;
-        case '#table:': 
-            styleCreate = {
-                spacing: {
-                    before: 120, // 120 = 6pt
-                    after: 0, 
-                },
-                indent: {
-                    firstLine: 0,
-                    left: 0, 
-                    right: 0, 
-                },
-                alignment: AlignmentType.CENTER,
-            }
-            break;
-        default:
-            break;
-    }
+const getStyleFormatFrom = async (templateName: string, command: string) => {
+    let urlTemplateName = encodeURIComponent(templateName);
+    let urlCommand = encodeURIComponent(command);
+    let styleCreate = {};
+    await api.get('template/command/formatstyle?template='+urlTemplateName+'&command='+urlCommand).then(response => {
+        styleCreate = response.data;
+    });
     return styleCreate;
 }
 
 //Get the style to the text
-function getStyleTextFrom(templateName: string, word: string){
+const getStyleTextFrom = async (templateName: string, command: string) => {
+    let urlTemplateName = encodeURIComponent(templateName);
+    let urlCommand = encodeURIComponent(command);
     let styleCreate = {}
-    switch(word){
-        case '#title:':
-            styleCreate = {
-                bold: true,
-                font: "Times",
-                size: 32, // 32 = 16 size
-                italics: false,
-            }
-            break;
-        case '#author:':
-            styleCreate = {
-                bold: true,
-                font: "Times",
-                size: 24, // 24 = 12 size
-                italics: false,
-            }
-            break;
-        case '#institute:':
-            styleCreate = {
-                bold: false,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: false,
-            }
-            break;
-        case '#email:':
-            styleCreate = {
-                bold: false,
-                font: "Courier New",
-                size: 20, // 20 = 10 size
-                italics: false,
-            }
-            break;
-        case '#abstract:':
-            styleCreate = {
-                bold: false,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: true,
-            }
-            break;
-        case '#resumo:':
-            styleCreate = {
-                bold: false,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: true,
-            }
-            break;
-        case '#section:':
-            styleCreate = {
-                bold: true,
-                font: "Times",
-                size: 26, //26 = 13 size
-                italics: false,
-            }
-            break;
-        case '#subsec:':
-            styleCreate = {
-                bold: true,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: false,
-            }
-            break;
-        case '#text:':
-            styleCreate = {
-                bold: false,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: false,
-            }
-            break;
-        case '#ref:':
-            styleCreate = {
-                bold: false,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: false,
-            }
-            break;
-        case '#caption:':
-            styleCreate = {
-                bold: true,
-                font: "Helvetica",
-                size: 20, //20 = 10 size
-                italics: false,
-            }
-            break;
-        case '#caption-justified:':
-            styleCreate = {
-                bold: true,
-                font: "Helvetica",
-                size: 20, //20 = 10 size
-                italics: false,
-            }
-            break;
-        case '#img:':
-            styleCreate = {
-                bold: false,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: false,
-            }
-            break;
-        case '#table-title:':
-            styleCreate = {
-                bold: true,
-                font: "Helvetica",
-                size: 20, //20 = 10 size
-                italics: false,
-            }
-            break;
-        case '#table-title-justified:':
-            styleCreate = {
-                bold: true,
-                font: "Helvetica",
-                size: 20, //20 = 10 size
-                italics: false,
-            }
-            break;
-        case '#table:':
-            styleCreate = {
-                bold: false,
-                font: "Times",
-                size: 24, //24 = 12 size
-                italics: false,
-            }
-            break;
-        default:
-            break;
-    }
+    await api.get('template/command/textstyle?template='+urlTemplateName+'&command='+urlCommand).then(response => {
+        styleCreate = response.data;
+    });
     return styleCreate;
 }
