@@ -28,7 +28,7 @@ const downloadDocx = (newDoc: Document, fileName: string) => {
 const buildDataToTheDocument = async (textWrote: string) => {
     const newDocument = new Document();
     
-    const fixedCommands = ['#:','#b:','#bc:','#i:','#ic:','#n','#t']; //are all fixed commands
+    const fixedCommands = ['#:','#b:','#bc:','#i:','#ic:','#n:','#t:']; //are all fixed commands
     let commands = ['#title:','#author:','#institute:','#email:','#abstract:','#resumo:','#section:',
     '#subsec:','#text:', '#ref:', '#img:', '#caption:','#caption-justified','#table-title:',
     '#table-title-justified:','#table:'];   // default commands(can be changed by a new template)
@@ -43,7 +43,7 @@ const buildDataToTheDocument = async (textWrote: string) => {
     let tableTitleDefault='#table-title:', bigTableTitleDefault='#table-title-justified:';
     let sectionDefault='#section:', subsecDefault='#subsec:';
     let imgDefault = '#img:';    
-    let tableDefault = '#table:';  
+    let tableDefault = '#table:';
     
     for(let i=0; i<textWrote.length; i++){
         while(textWrote[i]!=='\n' && textWrote[i]!==' ' && i<textWrote.length){
