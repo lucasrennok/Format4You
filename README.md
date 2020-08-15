@@ -1,5 +1,5 @@
 # <img src="/web/src/assets/images/icons/leaf.png" width="80" height="80">Format 4 You
->           *You write we format*
+> *You write we format*
 
 A plataform that format your projects in SBC style, you just need to put your thougths at the paper. Leave the boring job to us and use your time better in your works.
 
@@ -100,7 +100,7 @@ Each template have their own commands. To use other command, change the template
 
 The templates commands change the text style and the format style of the next words.
 
-#### SBC Template
+### :eight_spoked_asterisk: SBC Template (DEFAULT)
 
 **Commands:**
 
@@ -123,7 +123,7 @@ The templates commands change the text style and the format style of the next wo
 
 OBS.: '#celc:', '#rowc:' and '#tablec' are fixed commands, they are not from this template, but they can only be used if '#table:' appear.
 
-##### :arrow_forward: Table Example:
+> #### :arrow_forward: Table Example:
 
 The commands:
 
@@ -133,7 +133,7 @@ The result:
 
 ![table result](/images/tableDocumentExample.PNG)
 
-#### ABNT Template
+### :eight_spoked_asterisk: ABNT Template
 
 **Commands:**
 
@@ -154,29 +154,29 @@ POST URL:
 In the body put a JSON like this:
 
 > {
-	"template": "abnt",
-	"command": "#ref:",
-	"command_type": "referenceabnt",
-	"format_styles": {
-		"alignment": "left",
-		"spacing":{
-			"before": 0,
-			"after": 240
-		},
-		"indent":{
-			"firstLine": 0,
-			"hanging": 0,
-			"left": 0,
-			"right": 0
-		}
-	},
-	"text_styles":{
-		"bold": 0,
-		"font": "Times",
-		"size": 24,
-		"italics": 0
-	}
-}
+>	"template": "abnt",
+>	"command": "#ref:",
+>	"command_type": "referenceabnt",
+>	"format_styles": {
+>		"alignment": "left",
+>		"spacing":{
+>			"before": 0,
+>			"after": 240
+>		},
+>		"indent":{
+>			"firstLine": 0,
+>			"hanging": 0,
+>			"left": 0,
+>			"right": 0
+>		}
+>	},
+>	"text_styles":{
+>		"bold": 0,
+>		"font": "Times",
+>		"size": 24,
+>		"italics": 0
+>	}
+> }
 
 For example:
 
@@ -195,12 +195,12 @@ POST URL:
 In the body put a JSON like this:
 
 > {
-	"template": "sbc",
-	"top": 1985,
-	"right": 1700,
-	"bottom": 1420,
-	"left": 1700
-}
+>	"template": "sbc",
+>	"top": 1985,
+>	"right": 1700,
+>	"bottom": 1420,
+>	"left": 1700
+> }
 
 For example:
 
@@ -231,4 +231,4 @@ OBS.: Change the values to create a margin to a template. If you want to use oth
 9. [ ] New extensions to the documents(DOCX -> ODT -> PDF -> script.txt)
 10. [x] Page margins for different templates(API and Web)
 
-**Take a screenshot of your chart to put in the document, charts will be treated like images with '#img:'**
+**OBS.: Take a screenshot of your chart to put in the document, charts will be treated like images with '#img:'**
