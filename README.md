@@ -77,7 +77,7 @@ Wait a minute, developing...
 
 1. [x] Put tables and images(charts and pictures)
 2. [x] Order the sections(subsections, images, tables and charts) automatically
-3. [ ] References in ABNT
+3. [x] References in ABNT
 4. [ ] A way to make references easier (spoiler: autocomplete)
 5. [x] Api to manage the templates
 6. [ ] Auto translate(abstract->'resumo') (maybe)
