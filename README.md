@@ -84,6 +84,6 @@ Wait a minute, developing...
 7. [ ] Document preview
 8. [ ] New templates to format
 9. [ ] New extensions to the documents(DOCX -> ODT -> PDF -> script.txt)
-10. [ ] Page format for different templates(API and Web)
+10. [x] Page margins for different templates(API and Web)
 
 **Take a screenshot of your chart to put in the document, charts will be treated like images with '#img:'**

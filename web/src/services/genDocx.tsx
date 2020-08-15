@@ -59,7 +59,7 @@ const buildDataToTheDocument = async (textWrote: string) => {
                 templateName+=textWrote[i];
                 i++;
             }
-            let urlTemplateName = encodeURI(templateName);
+            let urlTemplateName = encodeURIComponent(templateName);
             await api.get('template/commands?template='+urlTemplateName).then(response => {
                 commands = response.data.allcommands;
             });
@@ -207,12 +207,13 @@ const buildDataToTheDocument = async (textWrote: string) => {
         data[data.length] = new Paragraph({children: phrase, ...styleFormatList});
     }
 
-    newDocument.addSection({margins: { //margin of the document
-        top: 1985,  // 3,5cm = 1985
-        right: 1700,  // 3cm = 1700
-        bottom: 1420,  // 2,5cm = 1420
-        left: 1700,  //3cm = 1700
-    },children: data,});
+    let pageMargins = {};
+    let urlTemplateName = encodeURIComponent(templateName);
+    await api.get('template/margins?template='+urlTemplateName).then(response => {
+        pageMargins = response.data;
+    });
+
+    newDocument.addSection({margins: pageMargins, children: data});
 
     return newDocument;
 }
