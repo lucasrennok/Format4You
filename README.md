@@ -10,9 +10,13 @@ This project was made with ReactJs in typescript template. The idea is to auto f
 
 ## :heavy_check_mark: Requirements
 
-![nodejs npm](https://miro.medium.com/max/2800/1*y5YLuOKO5XM7MOzve6XsDQ.png)
+<img src="https://miro.medium.com/max/2800/1*y5YLuOKO5XM7MOzve6XsDQ.png" width="200" height="100">
 
-**NodeJs**: NPM
+<img src="https://www.trytape.com/wp-content/uploads/2019/10/yarn_image.png" width="200" height="100">
+
+I used: **NPM** and **YARN**
+
+*Obs.: I was having some troubles with NPM at the beggining so I moved to yarn after a while.*
 
 ### :arrow_down_small: Downloads:
 
@@ -44,6 +48,18 @@ This project was made with ReactJs in typescript template. The idea is to auto f
  >
  > yarn add @types/cors
 
+### :boom: Starting it
+
+**WEB:**
+
+Go to the 'web' file and put:
+> yarn start
+
+**SERVER:**
+
+Go to the 'server' file and put:
+> yarn start
+
 ## :abcd: How it works
 Wait a minute, developing...
 
@@ -62,9 +78,9 @@ Wait a minute, developing...
 1. [x] Put tables and images(charts and pictures)
 2. [x] Order the sections(subsections, images, tables and charts) automatically
 3. [ ] References in ABNT
-4. [ ] A way to make references easier
-5. [ ] Api to manage the templates
-6. [ ] Auto translate(abstract->'resumo')
+4. [ ] A way to make references easier (spoiler: autocomplete)
+5. [x] Api to manage the templates
+6. [ ] Auto translate(abstract->'resumo') (maybe)
 7. [ ] Document preview
 8. [ ] New templates to format
 9. [ ] New extensions to the documents(DOCX -> ODT -> PDF -> script.txt)
