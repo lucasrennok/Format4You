@@ -1,13 +1,15 @@
 # <img src="/web/src/assets/images/icons/leaf.png" width="80" height="80">Format 4 You
 > *You write we format*
 
-A plataform that format your projects in SBC style, you just need to put your thougths at the paper. Leave the boring job to us and use your time better in your works.
+A plataform that format your projects, you just need to put your thougths at the paper. Leave the boring job to us and use your time better in your works.
 
 <img src="/web/src/assets/images/background.png" width="450" height="300">
 
 ## :newspaper: About it
 
-This project was made with ReactJs in typescript template. The idea is to auto format documents with the template: SBC. It will improove how you spend your time and make easier to do your works.
+This project was made with ReactJs in typescript template. The idea is to format automatically documents. It will improove how you spend your time and make easier to do your works.
+
+The default template is SBC and it is used to format the documents.
 
 ## :heavy_check_mark: Requirements
 
@@ -16,7 +18,7 @@ This project was made with ReactJs in typescript template. The idea is to auto f
 
 I used: **NPM** and **YARN**
 
-*Obs.: I was having some troubles with NPM at the beggining so I moved to yarn after a while.*
+*Obs.: I was having some troubles with NPM at the beginning so I moved to yarn after a while.*
 
 ### :arrow_down_small: Downloads:
 
@@ -76,7 +78,7 @@ At Writer you write your article with some commands that will format the text fo
 
 The commands change the text style and format style from the next words, so use them in your favor to format the document for you. When you press 'New file' the Writer will be with a default text to help you, change words and commands to get what you want to.
 
-## Fixed Commands
+## :symbols: Fixed Commands
 
 These are the fixed commands, that don't change when the templates change. So use them at any moment.
 
@@ -124,14 +126,14 @@ The templates commands change the text style and the format style of the next wo
 OBS.: '#celc:', '#rowc:' and '#tablec' are fixed commands, they are not from this template, but they can only be used if '#table:' appear.
 
 > #### :arrow_forward: Table Example:
-
-The commands:
-
-![table text](/images/tableTextExample.PNG)
-
-The result:
-
-![table result](/images/tableDocumentExample.PNG)
+> 
+> The commands:
+> 
+> ![table text](/images/tableTextExample.PNG)
+> 
+> The result:
+> 
+> ![table result](/images/tableDocumentExample.PNG)
 
 ### :eight_spoked_asterisk: ABNT Template
 
