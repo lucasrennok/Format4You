@@ -63,12 +63,15 @@ Go to the 'server' file and put:
 ## :abcd: How it works
 
 See:
+
 ![how it works](/images/platform.gif)
 
 You can change the document name at 'Document title'.
+
 ![document name](/images/documentTitle.PNG)
 
 At Writer you write your article with some commands that will format the text for you. When you finish it, you have to press 'Format' to download the document.
+
 ![writer](/images/writer.PNG)
 
 The commands change the text style and format style from the next words, so use them in your favor to format the document for you. When you press 'New file' the Writer will be with a default text to help you, change words and commands to get what you want to.
@@ -140,6 +143,8 @@ The result:
 
 I used [Imsomnia Core](https://insomnia.rest/) to use Post and Get methods, and I recommend to install it to create new templates with Post.
 
+---
+
 #### :heavy_minus_sign: Create Template Commands
 Use the Post method with 'JSON' text.
 
@@ -173,7 +178,13 @@ In the body put a JSON like this:
 	}
 }
 
-Change the values to create commands to a template.
+For example:
+
+![create template](/images/createTemplate.PNG)
+
+OBS.: Change the values to create commands to a template. To use the template commands you have to put '#template: your_template' at the beginning of the Writer. If you put nothing, SBC template is used by default.
+
+---
 
 #### :heavy_minus_sign: Create Template Margins
 Use the Post method with 'JSON' text.
@@ -191,7 +202,11 @@ In the body put a JSON like this:
 	"left": 1700
 }
 
-Change the values to create a margin to a template.
+For example:
+
+![create template margin](/images/createMargin.PNG)
+
+OBS.: Change the values to create a margin to a template. If you want to use other template margin, put at the end of the Writer the command: '#template: the_template'.
 
 ## :v: Want to help?
 
