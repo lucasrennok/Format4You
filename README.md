@@ -54,12 +54,12 @@ I used: **NPM** and **YARN**
 
 **WEB:**
 
-Go to the 'web' file and put:
+Go to the 'web' folder and put:
 > yarn start
 
 **SERVER:**
 
-Go to the 'server' file and put:
+Go to the 'server' folder and put:
 > yarn start
 
 ## :abcd: How it works
