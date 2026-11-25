@@ -54,9 +54,14 @@ Ana #celc: 20 #celc: #rowc:
 - `#b:` / `#bc:` ligam e desligam **negrito**; `#i:` / `#ic:` o *itálico*.
 - A lista completa de comandos fica no botão **"? Comandos"** dentro do editor.
 
-## :file_cabinet: Pasta `server/` (opcional, legado)
+## :file_cabinet: Pasta `server/` (opcional)
 
-A versão original guardava os estilos de cada template (SBC, ABNT) em uma API
-Express + SQLite na pasta `server/`. A web atual já traz o template padrão
-embutido e **não precisa mais do servidor** para funcionar. A pasta foi mantida
-como referência de quem quiser evoluir o sistema de múltiplos templates.
+A web atual já traz o template padrão embutido e **não precisa do servidor**
+para funcionar. O servidor é opcional e serve para quem quiser um sistema de
+**múltiplos templates** editável: ele guarda, em SQLite, os estilos de cada
+template (comandos, estilos de texto e de parágrafo, margens) e os expõe por
+uma API.
+
+Foi modernizado (Node + TypeScript em ESM, Express 5, Knex + better-sqlite3,
+migrations e seed do template SBC). Veja [`server/README.md`](server/README.md)
+para rodar.

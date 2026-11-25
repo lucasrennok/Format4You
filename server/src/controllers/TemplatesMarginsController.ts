@@ -1,46 +1,27 @@
-import {Request, Response} from 'express';
-import db from "../database/connections";
+import type { Request, Response } from 'express';
+import db from '../database/connection.js';
 
-export default class TemplatesMarginsController{
+export default class TemplatesMarginsController {
+  // Margens de um template
+  async getMargins(request: Request, response: Response) {
+    const template = typeof request.query.template === 'string' ? request.query.template : '';
+    if (!template) return response.status(400).json({ error: 'Informe o template.' });
 
-    async getMargins(request: Request, response: Response){
-        const {template} = request.query;
+    const margins = await db('template_margins')
+      .where({ template })
+      .select('top', 'right', 'bottom', 'left')
+      .first();
 
-        const templateMargins = await db('template_margins')
-            .where('template', '=', template as string)
-            .select('template_margins.top','template_margins.right','template_margins.bottom','template_margins.left');
+    if (!margins) return response.status(404).json({ error: 'Template não encontrado.' });
+    return response.json(margins);
+  }
 
-        return response.json(templateMargins[0]);
-    }
+  // Cria as margens de um template
+  async create(request: Request, response: Response) {
+    const { template, top, right, bottom, left } = request.body ?? {};
+    if (!template) return response.status(400).json({ error: 'Informe o template.' });
 
-    async create(request: Request, response: Response){
-        const {
-            template,
-            top,
-            right,
-            bottom,
-            left
-        } = request.body;
-    
-        const trx = await db.transaction();
-        try{
-            await trx('template_margins').insert({
-                template,
-                top,
-                right,
-                bottom,
-                left
-            });
-            
-            await trx.commit();
-    
-            return response.status(201).send();
-        }catch(err){
-            await trx.rollback();
-    
-            return response.status(400).json({
-                error: "Unexpected error while creating the template margin."
-            })
-        }
-    }
+    await db('template_margins').insert({ template, top, right, bottom, left });
+    return response.status(201).send();
+  }
 }

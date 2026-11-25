@@ -1,1 +1,17 @@
-\node_modules
+node_modules/
+dist/
+*.tsbuildinfo
+
+# banco gerado pelas migrations + seeds
+*.sqlite
+*.sqlite-journal
+src/database/*.sqlite
+
+# ambiente
+.env
+.env.*.local
+
+# editor / SO
+.vscode/
+.idea/
+.DS_Store
