@@ -1,12 +1,12 @@
-import path from 'path';
+import type { Knex } from 'knex';
+import { env } from './src/config/env.js';
 
-module.exports = {
-    client: 'sqlite3',
-    connection: {
-        filename: path.resolve(__dirname, 'src', 'database', 'database.sqlite')
-    },
-    migrations:{
-        directory: path.resolve(__dirname, 'src', 'database', 'migrations')
-    },
-    useNullAsDefault: true,
-}
+const config: Knex.Config = {
+  client: 'better-sqlite3',
+  connection: { filename: env.databasePath },
+  useNullAsDefault: true,
+  migrations: { directory: env.migrationsDir, extension: 'ts' },
+  seeds: { directory: env.seedsDir, extension: 'ts' },
+};
+
+export default config;

@@ -1,11 +1,18 @@
-import express from 'express';
-import routes from './routes';
-import cors from 'cors';
+import { createApp } from './app.js';
+import { env } from './config/env.js';
+import db from './database/connection.js';
 
-const app = express();
+const server = createApp().listen(env.port, env.host, () => {
+  console.log(`API de templates em http://${env.host}:${env.port}`);
+});
 
-app.use(cors());
-app.use(express.json());
-app.use(routes);
+async function shutdown(signal: string) {
+  console.log(`\n${signal} recebido, encerrando...`);
+  server.close(async () => {
+    await db.destroy();
+    process.exit(0);
+  });
+}
 
-app.listen(3333);
+process.on('SIGINT', () => void shutdown('SIGINT'));
+process.on('SIGTERM', () => void shutdown('SIGTERM'));

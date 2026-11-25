@@ -1,16 +1,16 @@
-import Knex from 'knex';
+import type { Knex } from 'knex';
 
-export async function up(knex: Knex){
-    return knex.schema.createTable('template_margins', table => {
-        table.string('template').primary(); //template name
-
-        table.integer('top').notNullable();
-        table.integer('right').notNullable();
-        table.integer('bottom').notNullable();
-        table.integer('left').notNullable();
-    });
+// Margens da página por template (em twips)
+export async function up(knex: Knex): Promise<void> {
+  await knex.schema.createTable('template_margins', (table) => {
+    table.string('template').primary();
+    table.integer('top').notNullable();
+    table.integer('right').notNullable();
+    table.integer('bottom').notNullable();
+    table.integer('left').notNullable();
+  });
 }
 
-export async function down(knex: Knex){
-    return knex.schema.dropTable('template_margins');
+export async function down(knex: Knex): Promise<void> {
+  await knex.schema.dropTable('template_margins');
 }
