@@ -1,51 +1,63 @@
-import React, { useState } from 'react';
-import PageHeader from '../../components/PageHeader/PageHeader';
+import { useMemo, useState } from 'react';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import Editor from '../../components/Editor/Editor';
+import Preview from '../../components/Preview/Preview';
+import SyntaxHelp from '../../components/SyntaxHelp/SyntaxHelp';
+import { parseDocument } from '../../lib/parser';
+import { downloadDocx } from '../../lib/renderDocx';
+import { SAMPLE_TEXT } from '../../lib/defaultTemplate';
+import './Writer.css';
 
+export default function Writer() {
+  const [text, setText] = useState(SAMPLE_TEXT);
+  const [fileName, setFileName] = useState('documento');
+  const [busy, setBusy] = useState(false);
 
-import './styles.css'
-import PageFooter from '../../components/PageFooter/PageFooter';
-import {genDocxWordWithData} from '../../services/genDocx';
+  const blocks = useMemo(() => parseDocument(text), [text]);
 
-function Writer() {
-  // defaultTextArea => template SBC
-  const defaultTextArea = "#order: true\n#title: Title here\n#author: Name here\n#institute: Institute here\n#email: E-mail here\n#abstract: #b: Abstract. #bc: the abstract here\n#resumo: #b: Resumo. #bc: o resumo aqui\n#: \n#section: First Section\n#: \n#text: Text from the first phrase of the section\n#t: Text in other paragraphs\n#subsec: Subsection\n#text: Something here.\n#img: https://img.r7.com/images/urso-panda-habitat-natural-reproducao-e-mais-curiosidades-31082019093403228 400 300\n#caption: This is a caption\n#: #caption-justified: This is used to big captions\n#section: Second section\n#table-title: Table title\n#: #table-title-justified: This is used to big titles\n#table:\nName #celc: Age #celc: #rowc:\nLucas #celc: 20 #celc: #rowc:\n#tablec:\n#section: References\n#: #template: abnt\n#ref: Rennó, L.(2000), \"GitHub: lucasrennok\", http://github.com/lucasrennok, August.\n#: This is a commentary\n#template: sbc\n#: ";
-  const [fileName, setFileName] = useState('newDocument');
-  const [textInWriter, setTextInWriter] = useState(defaultTextArea);
+  const handleDownload = async () => {
+    setBusy(true);
+    try {
+      await downloadDocx(blocks, fileName);
+    } catch (err) {
+      console.error(err);
+      alert('Não foi possível gerar o documento.');
+    } finally {
+      setBusy(false);
+    }
+  };
 
-  const handleWriterChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>{
-    setTextInWriter(e.target.value);
-
-    const numScroll = e.target.scrollHeight;
-    e.target.style.height = (numScroll-(numScroll%25))+'px';
-  }
-  
-  const handleDocTitleChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-    setFileName(e.target.value);
-  }
-
-  const getData = () => {
-    genDocxWordWithData(fileName, textInWriter);
-  }
-  
   return (
     <div className="page-writer">
-      <PageHeader inputBoolean={true} />
-      <div className="inputTitle">
-        <label>Document title</label>
-        <div className="inputBox">
-          <input placeholder="Type a title" type="text" maxLength={15} defaultValue="newDocument" onChange={handleDocTitleChange} />
-          <p>.docx</p>
+      <Header>
+        <div className="file-name">
+          <input
+            value={fileName}
+            maxLength={40}
+            onChange={(e) => setFileName(e.target.value)}
+            aria-label="Nome do arquivo"
+          />
+          <span>.docx</span>
         </div>
-      </div>
+        <SyntaxHelp />
+        <button className="btn-download" type="button" onClick={handleDownload} disabled={busy}>
+          {busy ? 'Gerando…' : 'Baixar .docx'}
+        </button>
+      </Header>
 
-      <div className="content">
-        <h1 className="title-writer">Writer</h1>
-        <textarea onFocus={handleWriterChange} placeholder="Type something" defaultValue={defaultTextArea} onChange={handleWriterChange} className="autoTextArea" />
-        <button onClick={getData} type="button">Format</button>
-      </div>
-      <PageFooter />
+      <main className="workspace">
+        <section className="pane pane-editor">
+          <div className="pane-label">Marcação</div>
+          <Editor value={text} onChange={setText} />
+        </section>
+        <section className="pane pane-preview">
+          <div className="pane-label">Pré-visualização</div>
+          <Preview blocks={blocks} />
+        </section>
+      </main>
+
+      <Footer />
     </div>
   );
 }
-
-export default Writer;

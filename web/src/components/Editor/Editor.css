@@ -1,0 +1,22 @@
+.editor {
+  flex: 1;
+  display: flex;
+  background: #1b1f27;
+  overflow: hidden;
+}
+
+.editor-area {
+  flex: 1;
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #e6e8ee;
+  padding: 24px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.editor-area::placeholder { color: #5b6170; }
