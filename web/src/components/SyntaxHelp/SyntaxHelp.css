@@ -1,0 +1,31 @@
+.help { position: relative; }
+
+.help-toggle {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.help-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+.help-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 340px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.6);
+  z-index: 20;
+}
+.help-panel h2 { margin: 0 0 12px; font-size: 0.95rem; }
+.help-row { display: grid; grid-template-columns: 1fr; gap: 2px; margin-bottom: 10px; }
+.help-row dt code { color: var(--accent); font-size: 0.82rem; }
+.help-row dd { margin: 0; font-size: 0.82rem; color: var(--muted); }

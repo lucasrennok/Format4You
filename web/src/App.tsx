@@ -1,12 +1,15 @@
-import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Landing from './pages/Landing/Landing';
+import Writer from './pages/Writer/Writer';
 
-import './assets/styles/global.css';
-import Routes from './routes';
-
-function App() {
+export default function App() {
   return (
-    <Routes />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/writer" element={<Writer />} />
+        <Route path="*" element={<Landing />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;

@@ -1,0 +1,15 @@
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+.brand-logo { width: 30px; height: 30px; }
+.brand-name { font-size: 1.15rem; font-weight: 600; }
+.brand-name strong { color: var(--accent); }
+.header-actions { display: flex; align-items: center; gap: 10px; }
